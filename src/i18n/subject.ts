@@ -1,0 +1,57 @@
+export default {
+  ZH_HK: {
+    search: "搜索題目",
+    startGame: "開始答題",
+    shareGame: "分享題目",
+    noQuestionBank: "沒有題庫",
+    noTopic: "沒有題目",
+    title: "學科",
+    edit: "編輯",
+    add: "添加",
+    _add: "",
+    name: "名稱",
+    input: "輸入",
+    grade: "適合年級",
+    confirm: "確定",
+    cancel: "取消",
+    emptyName: "名称未填",
+    questionBank: "題庫"
+  },
+  EN: {
+    search: "Question Search",
+    startGame: "Start answering",
+    shareGame: "Share question",
+    noQuestionBank: "No question bank",
+    noTopic: "No topic",
+    confirm: "Confirm",
+    title: "Topic",
+    edit: " Editing",
+    add: "",
+    _add: "Add a ",
+    name: "Name",
+    input: "Input",
+    grade: "Suitable for grade",
+    cancel: "Cancel",
+    emptyName: "Name is required",
+    questionBank: "Question Bank"
+
+  },
+  ZH_CN: {
+    search: "搜索题目",
+    startGame: "开始答题",
+    shareGame: "分享题目",
+    noQuestionBank: "没有题库",
+    noTopic: "没有题目",
+    title: "科目",
+    edit: "编辑",
+    add: "添加",
+    _add: "",
+    name: "名称",
+    input: "输入",
+    grade: "适合年级",
+    confirm: "确定",
+    cancel: "取消",
+    emptyName: "名称未填",
+    questionBank: "题库"
+  }
+}

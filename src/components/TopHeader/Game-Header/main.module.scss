@@ -1,0 +1,72 @@
+@import "@/theme";
+.gameHeaderMainContainer {
+  height: $game-main-header-height;
+  background-color: $game-main-header-bg;
+  color: $game-main-header-font-color;
+  font-size: 1rem;
+  display: grid;
+  border-bottom: 1px solid #e8e8e8;
+  grid-template-columns: 1fr 2fr 1fr;
+  box-sizing: border-box;
+  .left {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    .userIcon {
+      height: calc($game-main-header-height * 0.8);
+      width: auto;
+      align-self: center;
+    }
+    .name {
+      font-weight: 600;
+      font-size: 1.01rem;
+    }
+    .expirationTime {
+      color: #777777;
+      font-size: 0.9rem;
+    }
+  }
+  .right {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    .renewal {
+      width: 2rem;
+      position: absolute;
+      left: 5.6rem;
+      bottom: 1rem;
+      z-index: 1;
+    }
+  }
+  .center {
+    display: block;
+    text-align: center;
+    .centerLogo {
+      height: $game-main-header-height;
+      width: auto;
+    }
+  }
+  .rightItem {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    box-sizing: border-box;
+    padding-right: 8%;
+  }
+  .defaultSelectTheme {
+    font-size: large;
+    color: #11b734;
+    width: 10rem;
+    :deep(.el-input__wrapper) {
+      box-shadow: $main-box-shadow !important;
+    }
+    :deep(.el-input__wrapper.is-focus) {
+      box-shadow: $main-box-shadow-focus !important;
+    }
+    :deep(.el-select .el-input.is-focus .el-input__wrapper) {
+      box-shadow: $main-box-shadow-focus !important;
+    }
+  }
+}

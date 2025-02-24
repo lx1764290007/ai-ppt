@@ -1,0 +1,48 @@
+const en = {
+  work_name: "Work name",
+  work: "Work",
+  author: "Author",
+  rating: "Rating",
+  evaluation: "Evaluation",
+  work_evaluation: "Work evaluation",
+  ai_editor: "AI editor",
+  ai_evaluation: "AI Evaluation",
+  number_of_works: "Number of works",
+  view_works: "View works",
+  free_creation: "Free creation",
+  theme_creation: "Theme creation",
+  student_works: "Student works",
+  theme_name: "Theme name",
+  weight: "Weight",
+  edit: "AI Edit",
+  style: "Style",
+  perspective: "Perspective",
+  texture: "Texture",
+  composition: "Composition",
+  color: "Color"
+}
+
+const zh_hant = {
+  work_name: "作品名稱",
+  work: "作品",
+  author: "作者",
+  rating: "評分",
+  evaluation: "評價",
+  work_evaluation: "作品評價",
+  number_of_works: "作品數",
+  ai_editor: "AI 編輯",
+  ai_evaluation: "AI 評價",
+  view_works: "查看作品",
+  free_creation: "自由創作",
+  theme_creation: "主題創作",
+  student_works: "學生作品",
+  theme_name: "主題名稱",
+  weight: "權重值",
+  edit: "AI編輯",
+  style: "風格",
+  perspective: "透視",
+  texture: "質感",
+  composition: "構圖",
+  color: "色彩"
+}
+export default {en, zh_hant}

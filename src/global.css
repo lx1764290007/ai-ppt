@@ -1,0 +1,72 @@
+:root {
+    --border-radius: 10px;
+
+}
+.default__input {
+    overflow: hidden;
+    box-shadow: none;
+    border: none;
+    --el-input-focus-border: transparent;
+    /*--el-input-focus-border-color: #b6b6b6;*/
+    /*--el-input-hover-border: #8a8a8a;*/
+    --el-input-clear-hover-color: transparent;
+    --el-input-hover-border-color: #c9c9c9;
+    --el-input-border: none;
+    --el-input-border-radius: 10px;
+}
+.default__input :deep(.el-input__wrapper) {
+    border-radius: 10px;
+}
+.default__input--search {
+    --el-input-border-radius: 10px;
+}
+.default__button-primary {
+    background-color: #1368CE;
+    border-radius: 6px;
+    height: 38px;
+    &:hover {
+        background-color: #2a78d5;
+    }
+}
+/*.el-table tr:nth-child(even) {*/
+/*    background-color: #ccc;*/
+/*}*/
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+    background-color: #EEF7FF;
+}
+.el-table tr:first-child th{
+    background-color: #F7F7F7;
+    color: #43536C
+}
+thead {
+    background: #F7F7F7;
+}
+.default__button-active {
+    background: #1368CE !important;
+    box-shadow: 0 5px 10px 0 rgba(24,163,255,0.5);
+    color: #fff !important;
+}
+.default__button-active:hover {
+    background: #1163de;
+    box-shadow: 0 5px 10px 0 rgba(24,163,255,0.6);
+}
+.default__button-active:active {
+    background: linear-gradient(0deg, #116cf3, #0973dc);
+    box-shadow: 0 5px 10px 0 rgba(24,163,255,0.6);
+}
+.default__select {
+    box-shadow: none;
+    --el-select-input-focus-border-color: transparent;
+}
+.default__select .el-input__wrapper {
+    border-radius: 10px;
+
+}
+
+.table-header {
+    height: 60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
