@@ -211,7 +211,10 @@ const handleAvatarError = () => {
   // 如果图片加载失败，切换到默认头像
   avatarUrl.value = defaultIcon;
 };
-const getIcon = computed(() => userInfo.getUserInfo.user?.remark || defaultIcon);
+const getIcon = computed(() => {
+  console.log(userInfo.getUserInfo.user?.remark)
+  return userInfo.getUserInfo.user?.remark || defaultIcon
+});
 watch(logoutLoading, (newValue) => {
   if (newValue) {
     setTimeout(() => logoutLoading.value = false, 2000);
@@ -239,7 +242,6 @@ const onUpdateDone = (loginName: string, password: string, res: User.UserInfo) =
   userInfo.setUserInfo("nickname", res.nickname);
   userInfo.setUserInfo("institution", res.institution);
   userInfo.setUserInfo("remark", res.remark);
-
   setTimeout(() => {
     visible.value = false;
   }, 800);

@@ -5,7 +5,9 @@ export const useQuestionType = ()=> {
     SINGLE_CHOICE: 1,
     JUDGEMENT: 2,
     MULTIPLE_CHOICE: 3,
-    BLANKS: 4,
-    THUMBTACK: 5
+    READING1: 4,  //整段閱讀
+    READING2: 5,  //分段閱讀
+    BLANKS: 6,
+    THUMBTACK: 7
   }
 }

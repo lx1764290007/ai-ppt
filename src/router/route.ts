@@ -4,6 +4,7 @@ import Home_AI from "@/assets/menu/PPT.png";
 import Home_Setting from "@/assets/menu/ST.png";
 import Opus from "@/assets/menu/AL.png";
 import questionAnalysisIcon from "@/assets/menu/IQ.png";
+import ReadingComprehension from "@/assets/menu/ydlj.png";
 
 const DICTIONARY = {
   LOGIN: "登录",
@@ -185,7 +186,40 @@ export const routes: Menu.Data[] = [
     component: () => import("@vs/Question-Generation/Question-Generation-Main.vue"),
     auth: ["any"],
     menu: "",
-
+    permissions: [10,11,12]
+  },
+  {
+    name: "阅读理解",
+    icon: ReadingComprehension,
+    auth: ["any"],
+    children: [],
+    menu: "menu.comprehension.title",
+    role: ["0"]
+  },
+  {
+    path: "/reading-comprehension-document",
+    name: "閱讀文件",
+    component: () => import("@vs/Reading-Comprehension/Reading-Comprehension.vue"),
+    auth: ["any"],
+    role: ["0"],
+    menu: "menu.comprehension.document",
+    permissions: [10,11,12]
+  },
+  {
+    path: "/reading-home",
+    name: "多媒體互動",
+    component: () => import("@vs/Multimedia-Interaction/Home-Page.vue"),
+    auth: ["any"],
+    role: ["0"],
+    menu: "menu.comprehension.multimedia",
+    permissions: [10,11,12]
+  },
+  {
+    path: "/multimedia-subject",
+    name: "multimedia-subject",
+    component: () => import("@/views/Multimedia-Interaction/Subject-Page/Subject-Page.vue"),
+    auth: ["any"],
+    menu: "",
     permissions: [10,11,12]
   },
   {

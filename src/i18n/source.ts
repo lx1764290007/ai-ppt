@@ -25,6 +25,7 @@ import questionEdit from "@/i18n/questionEdit";
 import cropper from "@/i18n/cropper";
 import statement from "@/i18n/statement";
 import analysis from "@/i18n/analysis";
+import world from "@/i18n/world";
 
 export const zh_hant = {
   login: login.zh_hant,
@@ -55,6 +56,7 @@ export const zh_hant = {
   cropper: cropper.ZH_HK,
   statement: statement.ZH_HK,
   analysis: analysis.ZH_HK,
+  world: world.zh_hant
 }
 
 export const en = {
@@ -85,4 +87,5 @@ export const en = {
   cropper: cropper.EN,
   statement: statement.EN,
   analysis: analysis.EN,
+  world: world.en
 }

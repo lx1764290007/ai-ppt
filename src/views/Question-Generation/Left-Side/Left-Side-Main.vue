@@ -11,11 +11,11 @@
       >
         <div class="left-side-main-content__content__title">
           <!--@ts-nocheck-->
-          <span>{{ index + 1 }}. </span>
-          <h3>{{ $t(getTopicTypeTitle(item) as string) }}:</h3>
+          <span>{{ index + 1 }} </span>
+          <h3>{{ getTopicTypeTitle(item) && $t(getTopicTypeTitle(item)) }}:</h3>
         </div>
         <div class="left-side-main-content__content">
-          <div class="left-side-main-content__left-side__menu">
+          <div class="left-side-main-content__left-side__menu" v-if="item.type !== questionType.READING1 && item.type !== questionType.READING2">
             <el-icon class="left-side__menu__icon" @click.stop="onCopy(item, index)">
               <CopyDocument />
             </el-icon>
@@ -45,6 +45,9 @@
               :active-item="active === index"
               v-if="getTypeVisible(item, questionType.JUDGEMENT)"
             />
+            <reading-preview :data-source="item"
+                             :active-item="active === index"
+                             v-if="getTypeVisible(item, questionType.READING2, questionType.READING1)" />
           </div>
         </div>
 
@@ -56,7 +59,7 @@
         <el-button class="buttons-primary" size="large" @click="onAddTopicHandler">
           {{ $t("questionEditLeftSide.add") }}
         </el-button>
-        <TopicSetting  />
+        <TopicSetting />
       </div>
 
     </el-scrollbar>
@@ -69,7 +72,7 @@ import FillInTheBlanks from "@vs/Question-Generation/Left-Side/Fill-In-The-Blank
 import TrueOrFalseQuestionPage
   from "@vs/Question-Generation/Left-Side/True-Or-False-Question/True-Or-False-Question.vue";
 import ThumbtackAnswer from "@vs/Question-Generation/Left-Side/Thumbtack-Answer/Thumbtack-Answer.vue";
-
+import ReadingPreview from "@vs/Question-Generation/Left-Side/Reading/Reading-Preview.vue";
 import { CopyDocument, Delete } from "@element-plus/icons-vue";
 import { computed, nextTick, ref, watch } from "vue";
 import { useTopicStore } from "@/libs/usePinia";
@@ -116,7 +119,10 @@ const topicTypeTitle = useTopicDict();
 //   true_or_false: "判断题",
 //   blanks: "填空题"
 // };
-const getTopicTypeTitle = (target: QuestionItem) => topicTypeTitle.find(it => it.value === target.type)?.label;
+const getTopicTypeTitle = (target: QuestionItem) => {
+
+  return topicTypeTitle.find(it => it.value === target.type)?.label as string;
+}
 const getList = computed(() => topicStore.get());
 const active = computed(() => topicStore.getActive());
 const getTypeVisible = (item: QuestionItem, key: number, key2?: number) => item.type === key || item.type === key2;
@@ -156,9 +162,9 @@ const onPrevLoad = () => {
     _pagePrev -= 1;
     scrollbar.value.setScrollTop(40);
   }).finally(() => {
-    setTimeout(()=>{
+    setTimeout(() => {
       shouldScroll = true;
-    }, 500)
+    }, 500);
     prevLoading.value = false;
   });
 };
@@ -194,7 +200,7 @@ const onRemove = (index: number, id: number) => {
   }).then((res: Http.Response<any>) => {
     if (res.code === 200) {
       topicStore.remove(index);
-      if((topicStore.get() as QuestionItem[]).length < 6) {
+      if ((topicStore.get() as QuestionItem[]).length < 6) {
         onNextLoad();
       }
     }
@@ -236,14 +242,14 @@ watch(() => topicStore.get(), cb => {
     //@ts-ignore
     if (topicStore.get()?.length < 5 && _page > 1) {
 
-       onPrevLoad();
+      onPrevLoad();
     }
   }
-} );
+});
 watch(() => topicStore.getActive(), (cb: number) => {
   //@ts-ignore
   if (!isNaN(cb) && topicStore.get().length > 4) {
-     shouldScroll && setItemToScrollView(cb);
+    shouldScroll && setItemToScrollView(cb);
   }
 });
 </script>
@@ -334,7 +340,7 @@ h3 {
   letter-spacing: 1px;
   padding: 0 22px;
   margin: 10px 0 5px 0;
-
+  color: $main-title-color;
   span {
     font-size: smaller;
   }

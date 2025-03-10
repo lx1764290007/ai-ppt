@@ -33,7 +33,7 @@
       </div>
     </div>
     <el-scrollbar style="height: auto" ref="scroll" @scroll="onScrollEnd" >
-      <div class="tab__component-wrapper-header">
+      <div class="tab__component-wrapper-header" v-show="gradeList.length>0">
         <el-icon class="tab__component-icon-left" @click="onScrollHandle(-1, $event)" >
           <ArrowLeft />
         </el-icon>
@@ -41,7 +41,7 @@
           <ArrowRight />
         </el-icon>
         <div :class="{'tab__component-wrapper-header-item':true,'default__button-active':activeValue === item.id}"
-             v-for="(item,index) of gradeList" :key="item.id" @click="onSelect(item.id)">
+             v-for="(item) of gradeList" :key="item.id" @click="onSelect(item.id)">
           <!-- @dblclick="onEdit(index, item.label)" -->
           <!--          <el-icon class="tab__component-icon-delete" @click.stop="onDelete(item.label)" v-if="enableRemove">-->
           <!--            <Delete />-->
@@ -55,14 +55,15 @@
         </div>
       </div>
     </el-scrollbar>
-    <el-skeleton style="display: flex;flex-flow: row wrap;width: 100%;height: 100%;overflow-y: hidden" loading animated
+    <el-skeleton style="display: grid;justify-content: space-between;grid-auto-flow: dense; grid-template-columns:repeat(auto-fill, 210px); overflow-y: hidden" loading animated
                  v-if="loading">
       <template #template>
-        <el-skeleton-item variant="rect" class="item" style="width: 250px;height: 306px;margin: 15px 12px;"
+        <el-skeleton-item variant="rect" class="item" style="width: 210px;height: 306px;margin: 15px 15px;"
                           v-for="_item of 30" :key="_item" />
       </template>
     </el-skeleton>
-    <el-scrollbar class="home-container" v-else-if="!loading && dataSource.length >= 0">
+    <el-scrollbar class="home-container" v-else-if="!loading && dataSource.length >= 0" :always="false">
+      <div class="home-items--wrapper" :style="{'justify-content':dataSource.length<4? 'flex-start':'space-between'}">
       <div class="item-wrapper" v-for="(item,i) of dataSource" :key="i" v-loading="item.loading">
         <div class="item" @click="toSubjectPage(item)">
           <el-image class="img-content" :src="item.subjectImg" fit="cover" />
@@ -85,21 +86,24 @@
           <ContextMenu @select="onContextSelect($event, item)" />
         </div>
       </div>
-      <div class="item-wrapper">
-        <div class="item-add-last" @click="onAddTopic">
-          <img src="@/assets/add.webp" type="image/png" class="item-add-last--icon" alt="add" />
-          <span class="item-add-last--text">
-          {{ $t("home.home_item_line4") }}
-        </span>
-        </div>
+<!--      <div class="item-wrapper">-->
+<!--        <div class="item-add-last" @click="onAddTopic">-->
+<!--          <img src="@/assets/add.webp" type="image/png" class="item-add-last&#45;&#45;icon" alt="add" />-->
+<!--          <span class="item-add-last&#45;&#45;text">-->
+<!--          {{ $t("home.home_item_line4") }}-->
+<!--        </span>-->
+<!--        </div>-->
+<!--      </div>-->
       </div>
+      <div style="height: 25px"></div>
     </el-scrollbar>
 
   </div>
   <classification-component :current-grade="search.grade"
                             :grade-list="gradeList"
                             :visible="showTopicEdit"
-                            @close="onClose" :data="activeItem" />
+                            @close="onClose"
+                            :data="activeItem" />
   <el-empty description="empty" style="display: none" class="empty" image-size="120"
             v-if="!loading && dataSource.length < 1"></el-empty>
   <popup-component v-model:modal-value="showConfirm">
@@ -293,9 +297,7 @@ const onClose = (refresh: boolean) => {
   }
   showTopicEdit.value = false;
 };
-const onCloseConfirm = () => {
-  showConfirm.value = false;
-};
+
 const onAddTopic = () => {
   activeItem.value = undefined;
   showTopicEdit.value = true;
@@ -319,7 +321,7 @@ onBeforeMount(() => {
   .header {
     display: flex;
     flex-flow: row nowrap;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     .tools {
       position: relative;
@@ -330,15 +332,21 @@ onBeforeMount(() => {
     }
   }
   .home-container {
-    display: flex;
-    flex-flow: row wrap;
-    min-width: 300px;
     position: relative;
     height: calc(100vh - 60px - 62px - 70px);
-
+    padding-top: 10px;
+    box-sizing: border-box;
     :deep(.el-scrollbar__wrap) {
       width: 100%;
       box-sizing: border-box;
+    }
+    .home-items--wrapper {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 260px);
+      row-gap: 25px;
+      justify-content: space-between;
+      grid-auto-flow: dense;
+      justify-items: center;
     }
   }
 }
@@ -363,7 +371,6 @@ onBeforeMount(() => {
   box-sizing: border-box;
   border-radius: 10px;
   width: 240px;
-  margin: 15px 12px;
   min-height: 310px;
   position: relative;
   transition: all 0.2s ease-in-out;
@@ -489,8 +496,8 @@ onBeforeMount(() => {
 }
 
 .confirm-wrapper {
-  width: 330px;
-  height: 160px;
+  width: 380px;
+  height: 180px;
   background: #fff;
   border-radius: 12px;
   display: flex;

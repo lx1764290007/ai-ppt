@@ -445,8 +445,8 @@ watch(showWorkItem, (newValue) => {
 <style scoped lang="scss">
 .student-work--header {
   justify-content: space-between;
-  background-color: #fff;
-  padding-left: 20px;
+
+  padding-left: 10px;
   padding-right: 20px;
   align-items: center;
 }
@@ -608,7 +608,6 @@ watch(showWorkItem, (newValue) => {
   position: relative;
   height: 40px;
   text-align: right;
-  background-color: #f7f7f7;
   border-bottom: 1px solid #e7e7e7;
   box-sizing: border-box;
   display: flex;

@@ -7,22 +7,27 @@
       <div class="multiple-choice-question-content-title">
         {{ dataSource?.question }}
       </div>
-      <div class="multiple-choice-question-content-img">
-        <el-image
-          class="img"
-          :src="dataSource?.images?.[0].image"
-          type="image/png"
-          fit="contain"
-          alt="preview"
-          v-if="dataSource?.images?.[0].image"
-        />
-        <div v-else class="img-none">
-          <el-icon><Picture /></el-icon>
+      <div class="new-content">
+        <div class="multiple-choice-question-content-img">
+          <el-image
+            class="img"
+            :src="dataSource?.images?.[0].image"
+            type="image/png"
+            fit="contain"
+            alt="preview"
+            v-if="dataSource?.images?.[0].image"
+          />
+          <div v-else class="img-none">
+            <el-icon>
+              <Picture />
+            </el-icon>
+          </div>
         </div>
+
+      <div class="multiple-choice-question-content-footer">
+        <div class="multiple-choice-question-content-footer-demo" v-for="item of 4" :key="item"></div>
       </div>
     </div>
-    <div class="multiple-choice-question-content-footer">
-      <div class="multiple-choice-question-content-footer-demo" v-for="item of 4" :key="item"></div>
     </div>
   </div>
 </template>
@@ -45,20 +50,30 @@ defineProps<{ activeItem: boolean; dataSource: QuestionItem }>();
   box-sizing: border-box;
   transition: all 0.2s ease-in-out;
   margin-right: 3px;
+
   &:hover {
     box-shadow: $main-active-font-hover-color 0 0 0 3px;
   }
 }
+
 .active {
   box-shadow: $main-bg-color 0 0 0 3px !important;
 }
+
 .multiple-choice-question-content {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
 }
-
+.new-content {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-around;
+  height: 80%;
+  gap: 5px;
+}
 .multiple-choice-question-content-left {
   position: absolute;
   text-align: right;
@@ -111,24 +126,27 @@ defineProps<{ activeItem: boolean; dataSource: QuestionItem }>();
 
 .multiple-choice-question-content-footer {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
+  flex-flow: column wrap;
+  justify-content: space-around;
   align-items: center;
   box-sizing: border-box;
-  margin-top: 12px;
+
 }
 
 .multiple-choice-question-content-footer-demo {
   height: 2px;
-  background-color: #553fc5;
+  background-color: $question-main-line-background;
   border-radius: 2px;
-  width: 35%;
-  margin: 8px 5px;
+  width: 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
 }
+
 .img-none {
   font-size: 26px;
   color: #d2d2d2;
   padding: 4px 7px 0 7px;
   border: 1px dashed #c5c5c5;
 }
+
 </style>

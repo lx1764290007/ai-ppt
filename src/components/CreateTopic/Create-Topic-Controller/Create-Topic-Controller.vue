@@ -397,7 +397,7 @@ defineExpose<{
 }
 .topic-controller-footer-full--screen {
   position: absolute;
-  bottom: 15px;
+  bottom: 30px;
   left: 0;
   right: 0;
 }

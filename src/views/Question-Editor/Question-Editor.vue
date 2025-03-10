@@ -57,7 +57,7 @@
                   :value="item.value"
                 >
                   <div class="option-item">
-                    <el-image :src="item.icon" fit="contain" class="theme-icon"></el-image>
+                    <el-image :src="item.icon" fit="contain" :class="{'theme-icon':true, 'icon-fix': item.value === useQuestionType().JUDGEMENT}"></el-image>
                     <span class="selector-option">{{ $t(item.label) }}</span>
                   </div>
 
@@ -132,6 +132,7 @@ import { fetchAIPhoto, fetchQuestionGenerate } from "@/http/question";
 import type { Http } from "@/interface/Http";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { useQuestionType } from "@/libs/useQuestionType";
 
 
 
@@ -165,7 +166,7 @@ let i18n = useI18n();
 const inputTitle = ref<string>("");
 const selectedQuestions = ref<QuestionItem[]>([]);
 const topicDict = useTopicDict();
-const themeDemo = ref<{ value: string; label: string, icon: string }[]>(topicDict);
+const themeDemo = ref<{ value: number; label: string, icon: string }[]>(topicDict.filter(it=> !it.special));
 const themeValue = ref<number | undefined>();
 const loadingPercent = ref<number>(0);
 const DEFAULT_ERROR_IMAGE = "https://dreamlab.oss-us-east-1.aliyuncs.com/nopic.png";
@@ -405,7 +406,7 @@ watch(loading, () => {
   display: flex;
   flex-flow: row nowrap;
   align-items: flex-start;
-  padding: 20px;
+
 
   box-sizing: border-box;
   height: calc(100vh - 70px);
@@ -434,8 +435,8 @@ watch(loading, () => {
 
     .tag-wrapper {
       display: flex;
-      min-height: 35px;
-
+      min-height: 40px;
+      margin-top: 10px;
       .tag-item {
         margin-right: 10px;
 
@@ -555,5 +556,11 @@ watch(loading, () => {
     position: absolute;
     margin-top: 140px;
   }
+}
+.icon-fix {
+  width: 27px !important;
+  height: 27px !important;
+  margin-left: -2px;
+  margin-bottom: 7px;
 }
 </style>

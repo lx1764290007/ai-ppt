@@ -43,7 +43,11 @@ const zh_hant = {
   notFound: "當前頁面不存在",
   automatically: '后自动返回上一级',
   empty: "沒有內容",
-  userError: "目前登入帳號無權限訪問"
+  userError: "目前登入帳號無權限訪問",
+  word: "字",
+  close: "關閉頁面",
+  drop: "拖動文件到這裡或者",
+  click: "點擊選擇文件",
 }
 const en = {
   title: 'Tips',
@@ -90,7 +94,12 @@ const en = {
   notFound: 'The current page does not exist',
   automatically: 'Automatically return to the previous level after ',
   empty: "Empty",
-  userError: "The current login account does not have permission to access"
+  word: "words",
+  close: "Close",
+  userError: "The current login account does not have permission to access",
+  drop: "Drop file here or ",
+
+  click: "click to upload",
 }
 export default {
   zh_hant,

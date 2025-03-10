@@ -123,7 +123,8 @@ const userStore = useUserInfo();
 const getSubjectTypeList = () => {
   fetchTopicTypeList({
     subjectId: subjectId.value,
-    userId: userStore.getUserInfo?.user?.id
+    userId: userStore.getUserInfo?.user?.id,
+    type: route.query?.type || 1
   }).then((res: Http.Response<TopicType[]>) => {
     if (res.code === 200) {
       subjectTypeList.value = res.data;

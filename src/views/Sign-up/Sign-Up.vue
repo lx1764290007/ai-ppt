@@ -62,13 +62,13 @@
                   :placeholder="$t('universal.placeholder')" />
       </el-form-item>
       <el-form-item  label-width="0">
-        <button type="submit" class="sign-up-confirm--button default__button-active">
+        <el-button native-type="submit" class="sign-up-confirm--button default__button-active" :loading="loading">
           {{$t('signUp.confirm')}}
-        </button>
+        </el-button>
       </el-form-item>
     </el-form>
   </div>
-<LoadingComponent :show="loading" />
+
 </template>
 
 <script lang="ts" setup>
@@ -81,7 +81,7 @@ import { useRoute, useRouter } from "vue-router";
 import defaultAvatar from "@/assets/default-user-icon.png";
 import { ArrowLeft, Delete } from "@element-plus/icons-vue";
 import { fetchRegister, fetchUserUpdate } from "@/http/user";
-import LoadingComponent from "@cs/Loading-Com/Loading-Component.vue";
+
 import { useI18n } from "vue-i18n";
 
 interface UserData {

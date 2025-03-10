@@ -2,7 +2,7 @@
   <div class="subscription-center--title" :style="{'background-color': route.query.userId? 'transparent':'#fff'}">
     {{ $t("recharge.recharge_center") }}
   </div>
-  <div :class="{'subscription-center--scroll':true,'subscription-center--scroll-com':route.query.userId}" v-loading="launchLoading">
+  <el-scrollbar :class="{'subscription-center--scroll':true,'subscription-center--scroll-com':route.query.userId}" v-loading="launchLoading">
     <div :class="{'subscription-center':true, 'subscription-center-component':isComponent}">
       <!-- 左侧部分：管理员信息和剩余时间 -->
       <div :class="{sidebar:true}">
@@ -96,6 +96,7 @@
               {{ $t("recharge.currently_using") }}
             </div>
             <div :class="{'option-card':true,premium: index>0}">
+              <el-image :src="index<1? VIP_BACKGROUND_IMG:VIP_BACKGROUND_IMG_PLUS" alt="vip" fit="cover" class="vip-background" />
               <h2 style="margin-block-start: 25px;margin-block-end: 0;font-size: 26px">{{ item.name }}</h2>
               <div class="option-card-header">
                 <!--            <img :src="index>0? vip2Remark:vip1Remark" alt="vip" class="option-card&#45;&#45;img" />-->
@@ -117,7 +118,7 @@
                 {{ $t("recharge.buy_now") }}
               </el-button>
               <ul class="features" :style="{width: locale.locale.value === 'en'? '80%':'55%'}">
-                <li v-for="(it,i) of item.privilegesList" :key="i" style="position: relative">
+                <li v-for="(it,i) of (item.privilegesList)" :key="i" style="position: relative">
                   <el-image class="li-eye" :src="index>0? goldEyeIcon : blueEyeIcon" alt="eye" fit="contain"
                             @click="showMessage" />
                   <span>{{ it.remark }}</span>
@@ -128,7 +129,7 @@
         </div>
       </el-scrollbar>
     </div>
-  </div>
+  </el-scrollbar>
 
   <MessageBox v-model:visible="showConfirm"
               :confirm-text="$t('recharge.subscribe')"
@@ -165,6 +166,8 @@ import duration from "dayjs/plugin/duration";
 import { useI18n } from "vue-i18n";
 import blueEyeIcon from "@/assets/blue-eye.png";
 import goldEyeIcon from "@/assets/gold-eye.png";
+import VIP_BACKGROUND_IMG from "@/assets/recharge-center-bg-vip1.png";
+import VIP_BACKGROUND_IMG_PLUS from "@/assets/recharge-center-bg-vip2.png";
 
 dayJS.extend(duration);
 
@@ -505,16 +508,16 @@ watch(loading, newVal => {
 <style scoped lang="scss">
 .subscription-center {
   display: flex;
-  height: 700px;
   justify-content: flex-start;
   flex-flow: row nowrap;
   width: 100%;
   box-sizing: border-box;
+  padding-bottom: 50px;
   //max-height: 690px;
 }
 
 .subscription-center-component {
-  height: 800px;
+  //height: 800px;
   min-height: 695px;
 }
 
@@ -525,6 +528,7 @@ watch(loading, newVal => {
   padding: 20px;
   border-radius: 10px;
   min-height: 280px;
+  height: 100%;
 }
 
 .user-info {
@@ -563,7 +567,7 @@ watch(loading, newVal => {
   position: absolute;
   right: 8px;
   top: 8px;
-
+  z-index: 3;
 }
 
 .subscription-options {
@@ -575,7 +579,7 @@ watch(loading, newVal => {
   background-color: #fff;
   flex-shrink: 0;
   position: relative;
-  height: 100%;
+
   overflow: hidden;
 
 }
@@ -609,12 +613,23 @@ watch(loading, newVal => {
   background-color: #ffffff;
   border-radius: 10px;
   text-align: center;
-  background-image: url("@/assets/recharge-center-bg-vip1.png");
+  //background-image: url("@/assets/recharge-center-bg-vip1.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   color: #4061AC;
-  padding: 20px 40px;
+  padding: 30px 40px;
   width: 100%;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  .vip-background {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 120%;
+    left: 0;
+    top: 0;
+  }
 }
 
 .option-card h2.price {
@@ -630,13 +645,11 @@ watch(loading, newVal => {
 }
 
 .subscription-center--scroll {
-  height: calc(100% - 120px);
-  display: flex;
-  justify-content: flex-start;
+    height: calc(100vh - 60px - 75px - 20px - 10px);
 }
 .subscription-center--scroll-com {
-  height: 550px;
-  overflow-y: auto;
+  //height: 550px;
+  //overflow-y: auto;
 }
 .buy-btn {
   color: #fff;
@@ -662,7 +675,7 @@ watch(loading, newVal => {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  background-image: url(/src/assets/recharge-center-bg-vip2.png);
+ // background-image: url(/src/assets/recharge-center-bg-vip2.png);
   background-repeat: no-repeat;
   background-size: 100% 100%;
   color: #4061AC;
@@ -770,7 +783,7 @@ watch(loading, newVal => {
 .premium {
   color: #483720;
   box-sizing: border-box;
-  background-image: url(/src/assets/recharge-center-bg-vip2.png);
+  //background-image: url(/src/assets/recharge-center-bg-vip2.png);
   background-repeat: no-repeat;
   background-size: 100% 100%;
 
@@ -803,7 +816,7 @@ watch(loading, newVal => {
 }
 
 .right-scroll-part {
-  min-height: 800px;
+
   width: calc(100% - 304px);
   border-radius: 10px;
 
@@ -818,6 +831,7 @@ watch(loading, newVal => {
   justify-content: flex-start;
   height: 100%;
   background-color: #fff;
+  padding-bottom: 15px;
 }
 
 .is-not-member {

@@ -31,7 +31,7 @@ const props = withDefaults(
     show: false,
     color: "#fff",
     controller: null,
-    translateX: '240px'
+    translateX: '220px'
   }
 );
 const emit = defineEmits<{

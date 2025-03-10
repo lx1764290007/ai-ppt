@@ -32,6 +32,11 @@ export interface QuestionAnswer {
   displayLink?: string
   copyRight?: string
   imageKeywords?: string
+  article?: string
+  layout?: number
+  subLayout?: number
+  questionGroup?: string
+
 }
 
 export type QuestionType = 1 | 2 | 3 | 4 | 5 | number //1选择题 2判断题 3多项选择 4填空题 5图钉答案
@@ -53,6 +58,7 @@ export interface QuestionItem extends Partial<QuestionAnswer> {
   options: string[];
   question: string;
   type: QuestionType;
+
 }
 
 export interface Question {

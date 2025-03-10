@@ -23,14 +23,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { RouterView, useRoute } from "vue-router";
+import { RouterView, useRoute, useRouter } from "vue-router";
 import Menu from "@cs/Assign-Menu/Assign-Menu.vue";
 import TopHeader from "@cs/TopHeader/Main-Header.vue";
 import Alert from "@cs/Feedback/Alert-Component.vue";
 import { ElConfigProvider, ElMessage } from "element-plus";
 import en from "element-plus/es/locale/lang/en";
 import { useAlert } from "@/libs/useAlert";
-import { computed, provide, watch } from "vue";
+import { computed, onBeforeMount, provide, watch } from "vue";
 import { cAlert, MESSAGE_BOX, NET_ERROR_TIPS, oAlert } from "@/libs/useKeys";
 
 import pub from "@/libs/eventBus";
@@ -41,10 +41,12 @@ import { fetchSettingGet } from "@/http/setting";
 import type { Http } from "@/interface/Http";
 import { transformArtlabLanguageToIquiz, useDefaultLanguage } from "@/libs/useLanguageEnum";
 import { fetchGradeList } from "@/http/grade";
+import { useAuth } from "@/libs/useAuth";
 
 const userInfoData = useUserInfo();
 const locale = useI18n();
 const route = useRoute();
+const router = useRouter();
 const [onAlertOpen, onAlertClose, alertShow, alertConfig] = useAlert();
 provide(oAlert, onAlertOpen);
 provide(cAlert, onAlertClose);
@@ -120,9 +122,19 @@ watch(() => route.path, (cb, cb2) => {
     getGradeList(userInfoData.getUserInfo.user.id);
   }
 });
+ const userInfo = useAuth()
+onBeforeMount(()=>{
+  setTimeout(()=>{
+    if(!userInfo?.info?.token){
+      router.replace("/login");
+    }
+  },500)
+
+})
 </script>
 <style scoped lang="scss">
-@import "@/theme.scss";
+
+@use "@/theme.scss" as theme;
 .layout {
   padding: 0;
   margin: 0;
@@ -138,26 +150,26 @@ watch(() => route.path, (cb, cb2) => {
   --el-main-padding: 20px 20px 0 20px;
   --el-font-family: MicrosoftYaHei, "Noto Sans SC", Roboto, "Helvetica Neue", Agency FB, Batang, ui-serif, sans-serif,
   system-ui, monospace, fangsong;
-  --el-select-input-focus-border-color: $main-bg-color;
-  --el-input-focus-border: #553fc5;
-  --el-input-focus-border-color: #553fc5;
-  --el-color-primary: $main-active-font-color;
-
+  --el-select-input-focus-border-color: theme.$main-bg-color;
+  --el-input-focus-border: theme.$main-active-font-color;
+  --el-input-focus-border-color: theme.$main-active-font-color;
+  --el-color-primary: theme.$main-active-font-color;
+  --el-button-hover-bg-color: theme.$main-active-font-color;
   &:deep(.el-textarea) {
-    --el-input-focus-border: #553fc5;
-    --el-input-focus-border-color: #553fc5;
+    --el-input-focus-border: theme.$main-active-font-color;
+    --el-input-focus-border-color: theme.$main-active-font-color;
   }
 
   &:deep(.el-input__wrapper.is-focus) {
-    box-shadow: $main-box-shadow-focus !important;
+    box-shadow: theme.$main-box-shadow-focus !important;
   }
 
   &:deep(.el-select-dropdown__item.selected) {
-    color: $main-active-font-color !important;
+    color: theme.$main-active-font-color !important;
   }
 
   &:deep(.el-select .el-input.is-focus .el-input__wrapper) {
-    box-shadow: $main-box-shadow-focus !important;
+    box-shadow: theme.$main-box-shadow-focus !important;
   }
 }
 

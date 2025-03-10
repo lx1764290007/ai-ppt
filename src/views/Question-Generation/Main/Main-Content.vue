@@ -2,10 +2,10 @@
   <el-scrollbar class="main-wrapper">
     <div v-for="(item, index) of topicStore.get()" :key="index">
       <div v-show="getVisible(questionType.SINGLE_CHOICE , questionType.MULTIPLE_CHOICE) && topicStore.getActive() === index">
-        <MultipleChoiceQuestionContent :data-source="item" @load-image="(event)=>onLoadImage(event, index, item)" />
+        <MultipleChoiceQuestionContent :data-source="item" @load-image="(event:any)=>onLoadImage(event, index, item)" />
       </div>
       <div v-show="getVisible(questionType.JUDGEMENT) && topicStore.getActive() === index">
-        <TrueOrFalseQuestionPage :data-source="item" @load-image="(event)=>onLoadImage(event, index, item)" />
+        <TrueOrFalseQuestionPage :data-source="item" @load-image="(event:any)=>onLoadImage(event, index, item)" />
       </div>
       <div v-show="getVisible(questionType.BLANKS) && topicStore.getActive() === index">
         <FillInTheBlanks :data-source="item" />
@@ -13,7 +13,12 @@
       <div v-show="getVisible(questionType.THUMBTACK) && topicStore.getActive() === index">
         <ThunbtackAnswerPage :data-source="item" />
       </div>
+      <div v-show="(getVisible(questionType.READING1) ||getVisible(questionType.READING2))  && topicStore.getActive() === index">
+        <reading-question :data-source="item" />
+      </div>
     </div>
+
+    <el-empty :description="$t('universal.empty')" style="color: #dcdcdc;transform: translateY(60%)" v-if="topicStore.get().length<1 " />
   </el-scrollbar>
 </template>
 <script setup lang="ts">
@@ -25,6 +30,7 @@ import ThunbtackAnswerPage from "@vs/Question-Generation/Main/Thumbtack-Answer/T
 import { useQuestionType } from "@/libs/useQuestionType";
 import { watch } from "vue";
 import type { QuestionItem } from "@/interface/Topic";
+import ReadingQuestion from "@vs/Question-Generation/Main/Reading/Reading-Question.vue";
 
 const topicStore = useTopicStore();
 

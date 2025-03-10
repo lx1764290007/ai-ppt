@@ -62,7 +62,9 @@
       </el-button>
     </div>
   </div>
-
+  <div class="grade-bar">
+    <grades-bar @change="onGradeChange" />
+  </div>
   <div class="student__work--themes"  v-if="!showWorkItem && searchParams.type === WORK_TYPE.STUDENT">
     <div class="student__work--themes-item" v-for="(item, index) of themeList" :key="index">
       <el-image :src="folderImg" alt="folder" fit="contain" class="themes__item--folder"
@@ -70,7 +72,9 @@
       <input class="theme-input" :placeholder="$t('universal.placeholder')" v-model="item.themeName"
              @change="onUpdateTheme(item.id, $event.target.value)" />
     </div>
+
     <p class="empty-text" v-if="showEmpty_themeList">{{$t('universal.empty')}}</p>
+
   </div>
 
   <div class="student-work--content"  v-else-if="showWorkItem && searchParams.type === WORK_TYPE.STUDENT">
@@ -87,8 +91,9 @@
       </div>
     </div>
     <p class="empty-text" v-if="showEmpty_student">{{$t('universal.empty')}}</p>
+
   </div>
-  <div class="student-work--content"  v-if="searchParams.type === WORK_TYPE.FREE">
+  <div class="student-work--content"  v-if="searchParams.type === WORK_TYPE.FREE" :style="{'justify-content':freeWorkList.length<4? 'flex-start':'space-between'}">
     <div class="student-work--item free-creation-item" v-for="item of freeWorkList" :key="item.id"  style="cursor: auto">
       <div class="production-img free-creation-img" @click.stop="onOpenNewScene(item.id)">
         <el-image :src="item.photoUrl" alt="picture" fit="contain" />
@@ -104,6 +109,7 @@
       </div>
     </div>
     <p class="empty-text" v-if="showEmpty_free">{{$t('universal.empty')}}</p>
+
   </div>
   <div class="student-work--content"  v-if="searchParams.type === WORK_TYPE.THEME">
     <div class="student-work--item" v-for="item of themeWorkList" :key="item.id">
@@ -118,6 +124,7 @@
       </div>
     </div>
     <p class="empty-text" v-if="showEmpty_themes">{{$t('universal.empty')}}</p>
+    <div style="height:20px"></div>
   </div>
 
   <message-box v-model:visible="showAiAppraise" :height="300 * 2.1 + 'px'" :width="400 * 3 +'px'" @close="onClose">
@@ -140,6 +147,7 @@ import { Share } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { useI18n } from "vue-i18n";
 import LoadingComponent from "@cs/Loading-Com/Loading-Component.vue";
+import GradesBar from "@cs/Grade/Grades-Bar.vue";
 
 interface DataItem {
   productionname: string;
@@ -243,6 +251,7 @@ const getFreeWorkList = ()=> {
   fetchFreeCreationList({
     userId: props.userId,
     page: searchParams.page,
+    gradeId: searchParams.gradeId,
     pageSize: searchParams.pageSize,
     name: freeName.value
   }).then((res:Http.InfoListData<any>)=>{
@@ -324,9 +333,9 @@ const onSelectFolder = (id: number) => {
   getDataSource();
   showWorkItem.value = true;
 };
-const onGradeChange = () => {
-  searchParams.classesId = undefined;
-  getClassList();
+const onGradeChange = (id:number) => {
+  searchParams.gradeId = id;
+  onSearch();
 };
 const onShowAiEvaluate = (rowItem: any) => {
   try {
@@ -351,7 +360,7 @@ const onOpenNewScene = (id:number)=>{
 }
 const onShare = (id:number)=> {
   ///game/?type=1&id=244
-  const textToCopy = window.location.origin + `/webserver?type=${2}&id=${id}&userId=${props.userId}`;
+  const textToCopy = window.location.origin + `/webserver?type=${2}&id=${id}&userId=${props.userId}&language=${i18n.locale.value}`;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(textToCopy).then(function() {
       // 成功时更新结果显示区域
@@ -451,7 +460,7 @@ onBeforeMount(() => {
   // getDataSource();
   // getGradeList(true);
   // getClassList();
-     getFreeWorkList();
+    // getFreeWorkList();
   // getStudentWorkList();
 });
 watch(() => props.userId, (newValue) => {
@@ -491,15 +500,21 @@ watch(showWorkItem, (newValue) => {
 }
 
 .student-work--content, .student__work--themes {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: flex-start;
-  justify-content: flex-start;
 
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 220px);
+  grid-auto-flow: dense;
+  justify-content: space-between;
+  justify-items: center;
+  gap: 20px;
   box-sizing: border-box;
-  height: calc(100vh - 60px - 60px - 20px);
+  max-height: calc(100vh - 60px - 60px - 20px - 51px);
+  overflow-y: auto;
   position: relative;
+  padding-bottom: 20px;
   align-content: flex-start;
+  padding-top: 10px;
+  min-height: 150px;
 }
 .student__work--themes {
   padding-left: 20px;
@@ -551,7 +566,10 @@ watch(showWorkItem, (newValue) => {
   position: absolute;
   left: 0;
 }
-
+.grade-bar {
+  position: relative;
+  z-index: 2;
+}
 .themes-back:hover {
   color: #626262;
   cursor: pointer;
@@ -573,7 +591,7 @@ watch(showWorkItem, (newValue) => {
   box-shadow: 0px 10px 20px 0px rgba(189, 195, 211, 0.67);
   border-radius: 20px;
   overflow: hidden;
-  margin: 5px 12px 15px 12px;
+
   animation-name: student-work--item-animate;
   animation-duration: .3s;
   animation-fill-mode: forwards;

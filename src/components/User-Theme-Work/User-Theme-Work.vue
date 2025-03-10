@@ -5,7 +5,6 @@
     </el-icon>
   </div>
   <div class="table-header student-work--header">
-
     <div class="student-work--right_side" v-if="!showWorkItem">
       <el-input :placeholder="$t('creation.theme_name')"
                 class="default__input"
@@ -61,8 +60,11 @@
         {{$t('universal.search')}}
       </el-button>
     </div>
-  </div>
 
+  </div>
+  <div class="grade-bar">
+    <grades-bar @change="onGradeChange" />
+  </div>
   <div class="student__work--themes"  v-if="!showWorkItem && searchParams.type === WORK_TYPE.STUDENT">
     <div class="student__work--themes-item" v-for="(item, index) of themeList" :key="index">
       <el-image :src="folderImg" alt="folder" fit="contain" class="themes__item--folder"
@@ -71,6 +73,7 @@
              @change="onUpdateTheme(item.id, $event.target.value)" />
     </div>
     <p class="empty-text" v-if="showEmpty_themeList">{{$t('universal.empty')}}</p>
+
   </div>
   <div class="student-work--content"  v-else-if="showWorkItem && searchParams.type === WORK_TYPE.STUDENT">
     <div class="student-work--item" v-for="item of workList" :key="item.id" @click="onShowAiEvaluate(item)">
@@ -100,7 +103,7 @@
     </div>
     <p class="empty-text" v-if="showEmpty_free">{{$t('universal.empty')}}</p>
   </div>
-  <div class="student-work--content"  v-if="searchParams.type === WORK_TYPE.THEME">
+  <div class="student-work--content"  v-if="searchParams.type === WORK_TYPE.THEME" :style="{'justify-content':themeWorkList.length<4? 'flex-start':'space-between'}">
     <div class="student-work--item free-creation-item" v-for="item of themeWorkList" :key="item.id">
       <div class="production-img free-creation-img" @click.stop="openNewScene(item.id)">
         <el-image :src="item.photoUrl" alt="picture" fit="contain" />
@@ -116,6 +119,7 @@
       </div>
     </div>
     <p class="empty-text" v-if="showEmpty_themes">{{$t('universal.empty')}}</p>
+
   </div>
 
   <message-box v-model:visible="showAiAppraise" :height="300 * 2.1 + 'px'" :width="400 * 3 +'px'" @close="onClose">
@@ -138,6 +142,7 @@ import folderImg from "@/assets/folder.png";
 import { Share } from "@element-plus/icons-vue";
 import { useI18n } from "vue-i18n";
 import LoadingComponent from "@cs/Loading-Com/Loading-Component.vue";
+import GradesBar from "@cs/Grade/Grades-Bar.vue";
 
 interface DataItem {
   productionname: string;
@@ -254,6 +259,7 @@ const getThemeList = () => {
   loading.value = true;
   fetchThemeCreationList({
     userId: props.userId,
+    gradeId: searchParams.gradeId,
     page: searchParams.page,
     pageSize: searchParams.pageSize,
     name: themeWorkName.value
@@ -274,32 +280,9 @@ const onSearch = ()=> {
     getStudentWorkList();
   }
 }
-const getGradeList = (isGetClasses: boolean = false) => {
-  loading.value = true;
-  fetchGradeList({
-    userId: props.userId
-  }).then((res: Http.InfoListData<GradeItem>) => {
-    if (res && res.code === 200) {
-      gradeList.value = res.data;
-      searchParams.gradeId = res.data[0]?.id;
-    }
-    isGetClasses && getClassList(true);
-  }).finally(()=> loading.value = false)
-};
 
-const getClassList = (isGetTheme: boolean = false) => {
-  if(!searchParams.gradeId) return
-  fetchClasses({
-    userId: props.userId,
-    gradeId: searchParams.gradeId
-  }).then((res: any) => {
-    if (res && res.code === 200) {
-      classes.value = res.data;
-      searchParams.classesId = res.data[0]?.id;
-    }
-    isGetTheme && getStudentWorkList();
-  });
-};
+
+
 const getStudentWorkList = () => {
   loading.value = true;
   fetchClassesTheme({
@@ -322,9 +305,9 @@ const onSelectFolder = (id: number) => {
   getDataSource();
   showWorkItem.value = true;
 };
-const onGradeChange = () => {
-  searchParams.classesId = undefined;
-  getClassList();
+const onGradeChange = (id:number) => {
+   searchParams.gradeId = id;
+  onSearch();
 };
 const openNewScene = (id:number)=>{
   const text = window.location.origin + `/webserver?type=${1}&id=${id}&userId=${props.userId}`;
@@ -332,7 +315,7 @@ const openNewScene = (id:number)=>{
 }
 const onShare = (id:number)=> {
   ///game/?type=1&id=244
-  const textToCopy = window.location.origin + `/webserver?type=${1}&id=${id}&userId=${props.userId}`;
+  const textToCopy = window.location.origin + `/webserver?type=${1}&id=${id}&userId=${props.userId}&language=${i18n.locale.value}`;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(textToCopy).then(function() {
       // 成功时更新结果显示区域
@@ -448,7 +431,7 @@ onBeforeMount(() => {
   // getDataSource();
   // getGradeList(true);
   // getClassList();
-   getThemeList()
+  //  getThemeList()
   // getStudentWorkList();
 });
 watch(() => props.userId, (newValue) => {
@@ -469,8 +452,13 @@ watch(showWorkItem, (newValue) => {
   background-color: transparent;
   padding-left: 0;
   padding-right: 0;
-}
+  position: relative;
 
+}
+.grade-bar {
+  position: relative;
+  z-index: 2;
+}
 .production-img {
   width: 100%;
   overflow: hidden;
@@ -489,15 +477,20 @@ watch(showWorkItem, (newValue) => {
 }
 
 .student-work--content, .student__work--themes {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 220px);
+  grid-auto-flow: dense;
+  justify-content: space-between;
+  justify-items: center;
+  gap: 20px;
   box-sizing: border-box;
-  height: calc(100vh - 60px - 60px - 20px);
+  max-height: calc(100vh - 60px - 60px - 20px - 51px);
+  overflow-y: auto;
   position: relative;
   align-content: flex-start;
+  padding-bottom: 20px;
+  min-height: 150px;
+  padding-top: 10px;
 }
 .student__work--themes {
   padding-left: 20px;
@@ -570,7 +563,6 @@ watch(showWorkItem, (newValue) => {
   box-shadow: 0px 10px 20px 0px rgba(189, 195, 211, 0.67);
   border-radius: 20px;
   overflow: hidden;
-  margin: 5px 12px 15px 12px;
   animation-name: student-work--item-animate;
   animation-duration: .3s;
   animation-fill-mode: forwards;

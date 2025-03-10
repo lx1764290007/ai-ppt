@@ -62,9 +62,13 @@
                               :grade-list="getGrades"
                               ppt
                               :visible="addFolderVisible"
-                              @close="onClose" :data="activeItem" />
+                              @close="onClose"   />
   </div>
-  <PPTList v-if="state===1" :grade-list="getGrades" :grade="getCurrentTabId" :folder="folder" @back="onBack" />
+  <PPTList v-if="state===1"
+           :grade-list="getGrades"
+           :grade="getCurrentTabId"
+           :subject-name="''"
+           :folder="folder" @back="onBack" />
 
 </template>
 <script setup lang="ts">
@@ -223,21 +227,7 @@ const onCopy = (id:number) => {
 const onBack = () => state.value -= 1;
 const openMessage = (fn: Function) => {
   return
-  // ElMessageBox.confirm(
-  //   t("universal.delete_tips"),
-  //   "Warning",
-  //   {
-  //     confirmButtonText: t("universal.confirm"),
-  //     cancelButtonText: t("universal.cancel"),
-  //     type: "warning"
-  //   }
-  // )
-  //   .then(() => {
-  //     fn();
-  //   })
-  //   .catch(() => {
-  //
-  //   });
+
 };
 const onNext = (themeName:string, themeId: number, item:DataObject[]) => {
 
@@ -248,30 +238,7 @@ const onNext = (themeName:string, themeId: number, item:DataObject[]) => {
   }
   state.value += 1;
 };
-const onGradeUpdate = (index: number, value: number) => {
-  if (index > -1) {
-    panes[index].editable = false;
-  }
-  if (value) {
-    // fetchUpdateGrade({
-    //   userId: userInfo.getUserInfo.id,
-    //   newGrade: value,
-    //   oldGrade: panes[index].label
-    // }).then(res => {
-    //   if (res.code === 200) {
-    //     tab.value = value;
-    //
-    //     if (index > -1) {
-    //       panes[index] = {
-    //         label: value,
-    //         id: value,
-    //         editable: false
-    //       };
-    //     }
-    //   }
-    // });
-  }
-};
+
 const onRemoveGrade = (value: number) => {
   fetchRemoveGrade({
     userId: userInfo.getUserInfo.user?.id,

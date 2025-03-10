@@ -2,9 +2,13 @@
   <popup-component v-model:modal-value="show">
     <div class="subject-editor-container">
       <div class="subject-editor__header">
-        <span class="subject-editor__header--title">
-          {{data?.id? "":$t("subject.add")}}{{ $t("subject.questionBank") }}{{ data?.id ? $t("subject.edit") : "" }}
+        <span class="subject-editor__header--title" v-if="!word">
+          {{ data?.id ? "" : $t("subject.add")}}{{ $t("subject.questionBank") }}{{ data?.id ? $t("subject.edit") : "" }}
         </span>
+        <span class="subject-editor__header--title" v-else>
+               {{$t("world.update")}}
+        </span>
+
         <el-icon class="subject-editor__close" @click="()=>onClose()">
           <Close />
         </el-icon>
@@ -72,6 +76,7 @@ const props = defineProps<{
   visible: boolean
   data?: TopicType
   subjectId?: any
+  word?: boolean
 }>();
 const emit = defineEmits<{
   (event: "close", value?: boolean, data?:TopicType): void

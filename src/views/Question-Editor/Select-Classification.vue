@@ -3,40 +3,38 @@
     <div class="select-classification--wrapper" :style="{width: locale === 'en'? '450px':'410px'}">
       <div class="select-classification--header">
   <span :class="{'select-classification--title':true}">
-          {{$t("createQuestion.relateQuestionBank")}}
+          {{ $t("createQuestion.relateQuestionBank") }}
         </span>
         <el-icon class="select-classification__close" @click="()=> onClose()">
           <Close />
         </el-icon>
       </div>
       <div class="select-classification">
-        <div class="select-item"  >
-          <span style="font-size: 16px" :class="{'select-item-label--en':locale === 'en'}">{{$t("createQuestion.selectDepartment")}}：</span>
+        <div class="select-item">
+          <span style="font-size: 16px"
+                :class="{'select-item-label--en':locale === 'en'}">{{ $t("createQuestion.selectDepartment") }}：</span>
           <el-select :placeholder="$t('createQuestion.selectDepartment')"
-                     size="large"
-                     filterable
-                     remote
-                     allow-create
-                     @change="onChange"
-                     :remote-method="onSearch"
                      style="width: 210px"
                      :no-data-text="locale==='en'? $t('createQuestion.atThisDifficulty') + grade:$t('createQuestion.atThisDifficulty')+grade+$t('createQuestion.noSubject')"
                      v-model="classification"
                      class="input__default_theme">
-            <el-option :label="item.subjectName || locale === 'en'? item.subjectNameEn : locale === 'zh_hant'? item.subjectNameHk : item.subjectNameCn" :value="item.id" :key="index" v-for="(item, index) of subjectList" />
+            <el-option :label="item.subjectName || locale === 'en'?
+            item.subjectNameEn : locale === 'zh_hant'? item.subjectNameHk : item.subjectNameCn"
+                       :value="item.id" :key="index" v-for="(item, index) of subjectList" />
 
           </el-select>
         </div>
-        <div class="select-item" >
-          <span style="font-size: 16px" :class="{'select-item-label--en':locale === 'en'}">{{$t('createQuestion.bankName')}}：</span>
-<!--          <el-select placeholder="选择题库"-->
-<!--                     size="large"-->
-<!--                     :no-data-text="getGradeName? `此分类下(${getGradeName})没有题库`:`请先选择分类`"-->
-<!--                     :loading="topicTypeLoading"-->
-<!--                     v-model="questions"-->
-<!--                     class="input__default_theme">-->
-<!--            <el-option :label="item.typeName" :value="item.id" v-for="(item,i) of topicTypeList" :key="i" />-->
-<!--          </el-select>-->
+        <div class="select-item">
+          <span style="font-size: 16px"
+                :class="{'select-item-label--en':locale === 'en'}">{{ $t("createQuestion.bankName") }}：</span>
+          <!--          <el-select placeholder="选择题库"-->
+          <!--                     size="large"-->
+          <!--                     :no-data-text="getGradeName? `此分类下(${getGradeName})没有题库`:`请先选择分类`"-->
+          <!--                     :loading="topicTypeLoading"-->
+          <!--                     v-model="questions"-->
+          <!--                     class="input__default_theme">-->
+          <!--            <el-option :label="item.typeName" :value="item.id" v-for="(item,i) of topicTypeList" :key="i" />-->
+          <!--          </el-select>-->
           <el-input type="text" style="width: 210px"
                     v-model="questions"
                     size="large"
@@ -47,10 +45,10 @@
       </div>
       <div class="select-classification--footer">
         <el-button class="buttons-primary" size="large" @click.stop="onCreateQuestion" :loading="loading">
-          {{$t('createQuestion.confirm')}}
+          {{ $t("createQuestion.confirm") }}
         </el-button>
         <el-button class="buttons-default" style="width: 150px" size="large" @click="()=> onClose()">
-          {{$t('createQuestion.cancel')}}
+          {{ $t("createQuestion.cancel") }}
         </el-button>
       </div>
     </div>
@@ -79,7 +77,7 @@ const props = defineProps<{
   dataSource: QuestionItem[]
 }>();
 const emit = defineEmits<{
-  (event: "close", value: QuestionAnswer[]|undefined): void
+  (event: "close", value: QuestionAnswer[] | undefined): void
 }>();
 const visible = ref(props.show);
 const classification = ref();
@@ -88,11 +86,11 @@ const userInfo = useUserInfo();
 const subjectList = ref<TopicOverview[]>([]);
 const topicTypeLoading = ref(false);
 const topicTypeList = ref<TopicType[]>([]);
-const {locale,t} = useI18n();
-const onClose = (obj?:QuestionAnswer[]) => {
+const { locale, t } = useI18n();
+const onClose = (obj?: QuestionAnswer[]) => {
   classification.value = undefined;
   emit("close", obj);
-}
+};
 const loading = ref(false);
 
 const getData = async (gradeId: number) => {
@@ -109,7 +107,7 @@ const getData = async (gradeId: number) => {
 };
 
 const getTopicTypeList = () => {
-  if (topicTypeList.value.length > 0 || isNaN(classification.value)) return
+  if (topicTypeList.value.length > 0 || isNaN(classification.value)) return;
   fetchTopicTypeList({
     subjectId: classification.value,
     userId: userInfo.getUserInfo?.user?.id
@@ -117,7 +115,7 @@ const getTopicTypeList = () => {
     if (res.code === 200) {
       topicTypeList.value = res.data;
     }
-  }).catch(e=> console.error(e)).finally(() => topicTypeLoading.value = false);
+  }).catch(e => console.error(e)).finally(() => topicTypeLoading.value = false);
 };
 const searchTopicTypeList = async () => {
 
@@ -125,42 +123,39 @@ const searchTopicTypeList = async () => {
   const gradeList = await getGradeList();
   const _grade = gradeList.find(it => it.grade === props.grade)?.id;
   return await fetchTopicTypeSearch({
-    subjectName: isNaN(classification.value)? classification.value: subjectList.value.find(it=> it.id === classification.value)?.subjectName,
-    subjectNameCn: isNaN(classification.value)? classification.value: subjectList.value.find(it=> it.id === classification.value)?.subjectNameCn,
-    subjectNameHk:isNaN(classification.value)? classification.value: subjectList.value.find(it=> it.id === classification.value)?.subjectNameHk,
-    subjectNameEn: isNaN(classification.value)? classification.value: subjectList.value.find(it=> it.id === classification.value)?.subjectNameEn,
+    subjectId: classification.value,
     gradeId: _grade,
     subjectTypeName: questions.value
-  }) as Http.Response<{ id:number,subjectId: number }>
-}
+  }) as Http.Response<{ id: number, subjectId: number }>;
+};
 
 const onCreateQuestion = async () => {
-  if(!questions.value || String(questions.value).trim().length < 1) {
+  if (!questions.value || String(questions.value).trim().length < 1) {
     ElMessage({
-      message: t('createQuestion.questionNameIsNotFilledIn'),
+      message: t("createQuestion.questionNameIsNotFilledIn"),
       icon: "Warning", // 自定义图标
       type: "info",
       duration: 3000,
       offset: 50
     });
-    return
+    return;
   }
-  if(!classification.value || String(classification.value).trim().length < 1){
+  if (!classification.value || String(classification.value).trim().length < 1) {
     ElMessage({
-      message: t('createQuestion.noTopicSelect'),
+      message: t("createQuestion.noTopicSelect"),
       icon: "Warning", // 自定义图标
       type: "info",
       duration: 3000,
       offset: 50
     });
-    return
+    return;
   }
 
   loading.value = true;
 
   const topicTypeData = await searchTopicTypeList();
 
-  if(topicTypeData.code === 200){
+  if (topicTypeData.code === 200) {
     const gradeList = await getGradeList();
     const _grade = gradeList.find(it => it.grade === props.grade)?.id;
     const target: Array<QuestionAnswer> = props.dataSource.map(it => {
@@ -186,37 +181,37 @@ const onCreateQuestion = async () => {
     fetchQuestionAdd(target).then((res: Http.Response<any>) => {
       if (res?.code === 200) {
         ElMessage({
-          message: t('createQuestion.added'),
+          message: t("createQuestion.added"),
           icon: "Warning", // 自定义图标
           type: "info",
           duration: 3000,
           offset: 50
         });
-        nextTick(()=> onClose(res.data));
+        nextTick(() => onClose(res.data));
       }
-    }).finally(()=> {
+    }).finally(() => {
       loading.value = false;
-    }).catch((e:any)=> {
+    }).catch((e: any) => {
       loading.value = false;
-    })
+    });
   }
 };
-const onChange = (value:string)=> {
+const onChange = (value: string) => {
   console.log(value);
-}
-const onSearch = async (value:string)=> {
-   if(!value.trim()) return
+};
+const onSearch = async (value: string) => {
+  if (!value.trim()) return;
   const gradeList = await getGradeList();
-    const _grade = gradeList.find(it => it.grade === props.grade)?.id;
-    fetchSearchTopic({
-      subjectName: value || classification.value,
-      gradeId: _grade
-    }).then((res:Http.Response<TopicOverview[]>) => {
-      if (res?.code === 200) {
-        subjectList.value = res.data.concat(subjectList.value);
-      }
-    })
-}
+  const _grade = gradeList.find(it => it.grade === props.grade)?.id;
+  fetchSearchTopic({
+    subjectName: value || classification.value,
+    gradeId: _grade
+  }).then((res: Http.Response<TopicOverview[]>) => {
+    if (res?.code === 200) {
+      subjectList.value = res.data.concat(subjectList.value);
+    }
+  });
+};
 watch(() => props.show, (cb) => {
   visible.value = cb;
   if (cb) {
@@ -227,13 +222,13 @@ watch(() => props.show, (cb) => {
   }
 });
 
-watch(loading, (cb)=> {
-  if(cb){
+watch(loading, (cb) => {
+  if (cb) {
     setTimeout(() => {
       loading.value = false;
-    }, 30000)
+    }, 30000);
   }
-})
+});
 </script>
 <style scoped lang="scss">
 @import "@/theme.scss";
@@ -290,6 +285,7 @@ watch(loading, (cb)=> {
     width: 410px;
     text-align: right;
   }
+
   .select-item-label--en {
     display: inline-block;
     width: 175px;

@@ -24,4 +24,5 @@ export interface TopicType {
   userId: number
   subjectId: number
   gradeId: number
+  docId?:string
 }

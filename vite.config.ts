@@ -27,14 +27,14 @@ export default defineConfig(({ mode }) => {
       proxy: {
         cors:'cors',
         '/server': {
-          target: 'https://us.idea.lab.garlicfit.com',
+          target: 'https://test.idea.lab.garlicfit.com',
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/^\/server/, '')
         },
 
         '/question-server': {
-          target: 'https://us.idea.lab.garlicfit.com/api/question',
+          target: 'https://test.idea.lab.garlicfit.com/api/question',
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/^\/question-server/, '')

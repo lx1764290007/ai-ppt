@@ -29,9 +29,9 @@
       </div>
     </el-scrollbar>
     <div class="tab__component-workspace-container">
-      <div class="tab__component-workspace">
+      <div class="tab__component-workspace" :style="{'justify-content':list.length<4? 'flex-start':'space-between'}">
         <div class="panes-item" v-loading="it.loading" v-for="(it,index) of list" :key="index"
-             @click.stop="onNavigate(it.subjectName, it.id ,it.pptList)">
+             @click.stop="onNavigate(it.subjectName || locale === 'en'? it.subjectNameEn: locale === 'zh'? it.subjectNameCn:it.subjectNameHk, it.id ,it.pptList)">
           <div class="tabs-item"  >
             <!--            <el-icon class="delete-icon" v-show="enableRemove" @click.stop="onRemoveFolder(it.id)">-->
             <!--              <CircleCloseFilled />-->
@@ -53,18 +53,19 @@
             </div>
           </div>
         </div>
-        <div class="panes-item" @click="onAdd" >
-          <div class="tabs-item">
+<!--        <div class="panes-item" @click="onAdd" >-->
+<!--          <div class="tabs-item">-->
 
-            <el-image :src="'https://dreamlab.oss-us-east-1.aliyuncs.com/subject.png'" alt="image"
-                      class="item-cover" fit="fill" />
-            <div class="item-info">
-              <span style="">{{$t('home.home_item_line4')}}</span>
+<!--            <el-image :src="'https://dreamlab.oss-us-east-1.aliyuncs.com/subject.png'" alt="image"-->
+<!--                      class="item-cover" fit="fill" />-->
+<!--            <div class="item-info">-->
+<!--              <span style="">{{$t('home.home_item_line4')}}</span>-->
 
-          </div>
-          </div>
-        </div>
+<!--          </div>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
+      <el-empty :description="$t('universal.empty')" v-if="list.length === 0 && !loading" style="margin-top: 50px"  />
     </div>
     <classification-component :current-grade="grade"
                               :grade-list="getGrades"
@@ -137,7 +138,7 @@ const emit = defineEmits<{
   (ev: "remove", value: string): void
   (ev: "change", value: string): void
   (ev: "edit", value: number): void
-  (ev: "update", boolean): void
+  (ev: "update", value: boolean): void
   (ev: "update:activeValue", value: number): void
   (ev: "add-folder"): void
   (ev: "update-theme-name", index: number, value: string): void
@@ -192,8 +193,8 @@ const onClose = (data:boolean)=> {
   showTopicEdit.value = false;
   emit("update", data)
 }
-const onDelete = () => {
-  onRemoveFolder(activeItem.value?.id)
+const onDelete = (data?:any) => {
+  onRemoveFolder(activeItem.value?.id as number)
  // emit("remove", activeItem.value?.id);
 };
 const onUpdate = (index: number, event: InputEvent) => {
@@ -329,11 +330,13 @@ const onNavigate = (themeName: string, themeId: number, item: DataObject[]) => {
 }
 
 .tab__component-workspace {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-flow: row wrap;
-  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 260px );
+  gap: 0;
+  justify-content: space-between;
+  justify-items: center;
+  grid-auto-flow: dense;
+  padding-top: 10px;
 }
 
 .panes-item {
@@ -345,6 +348,8 @@ const onNavigate = (themeName: string, themeId: number, item: DataObject[]) => {
   margin-bottom: 20px;
   margin-left: 10px;
   margin-right:  10px;
+  max-height: calc(100vh - 60px - 60px);
+
 }
 
 .panes-item:hover  {
@@ -462,8 +467,8 @@ const onNavigate = (themeName: string, themeId: number, item: DataObject[]) => {
   box-sizing: border-box;
 }
 .confirm-wrapper {
-  width: 330px;
-  height: 160px;
+  width: 380px;
+  height: 180px;
   background: #fff;
   border-radius: 12px;
   display: flex;

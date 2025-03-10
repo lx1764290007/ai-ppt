@@ -15,22 +15,22 @@ $menu-font-size: 16px;
 $menu-font-weight: 500;
 $menu-font-color: #333;
 $menu-item-hover-bg: #267ee7;
-$menu-item-active-bg: #6650d7;
+$menu-item-active-bg: #3c86e5;
 $menu-item-active-font-weight: 600;
 $menu-item-active-font-color: #fff;
-
+$main-title-color: #43536C;
 /** main-area **/
 $main-area-bg: #f0f4ff;
-$main-bg-color: #1368CE;
+$main-bg-color: #5099f1;
 $main-active-font-color: #1368CE;
-$main-active-font-hover-color: #247fec;
+$main-active-font-hover-color: #2b74a2;
 $main-box-shadow: 0 0 0 2px #d9dfed inset;
 $main-box-shadow2: 14px 14px 30px 15px #BDC3D3;
 $main-box-shadow-focus: 0 0 0 2px $menu-item-hover-bg inset;
 $main-confirm-bg-color: #1368CE;
-$main-confirm-bg-color-active: #553FC5;
+$main-confirm-bg-color-active: #1a7cb0;
 
-$main-confirm-bg-color-active-opacity: rgba(102, 80, 215, 0.4);
+$main-confirm-bg-color-active-opacity: rgba(53, 165, 225, 0.4);
 
 /** question-generation **/
 $question-generation-left-side-width: 225px;
@@ -39,6 +39,7 @@ $question-generation-aside-bg: #fff;
 $question-generation-aside-height: $full-screen-height;
 $question-generation-aside-preview-item-height: 130px;
 $question-generation-aside-preview-item-bg: #fff;
+$question-main-line-background: #ccc;
 $question-generation-aside-preview-item-img-width: calc($question-generation-left-side-width * 0.3);
 $question-generation-aside-preview-item-img-height: calc(
   $question-generation-aside-preview-item-img-width / 1.77
@@ -46,7 +47,7 @@ $question-generation-aside-preview-item-img-height: calc(
 
 /** question-main **/
 $question-generation-main-height: $full-screen-height;
-$question-generation-main-picture-preview-width: calc(389.5px * 1.4);
+$question-generation-main-picture-preview-width: calc(350px * 1.4);
 $question-generation-main-picture-preview-height: calc($question-generation-main-picture-preview-width * 3 / 4);
 
 /** game **/
@@ -69,7 +70,7 @@ $game-main-header-font-color: #333;
     box-shadow: 0 10px 13px 0 rgba(119, 122, 255, 0.6);
   }
   &:link {
-    background-color: #642ba6;
+    background-color: #4f8dd5;
     box-shadow: 0 10px 13px 0 rgba(119, 122, 255, 0.6);
   }
   &:disabled {

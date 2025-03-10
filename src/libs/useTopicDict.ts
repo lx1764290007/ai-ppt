@@ -7,22 +7,38 @@ export const useTopicDict = () => {
     {
       label: "topicType.mixing",
       value: questionType.RANDOM_QUESTION,
+      special: false,
       icon: new URL("@/assets/random.svg", import.meta.url).href
     },
     {
       label: "topicType.single",
       value: questionType.SINGLE_CHOICE,
+      special: false,
       icon: new URL("@/assets/single.svg", import.meta.url).href
     },
     {
       label: "topicType.judgment",
       value: questionType.JUDGEMENT,
+      special: false,
       icon: new URL("@/assets/demo/icon-true-or-false.svg", import.meta.url).href
     },
     {
       label: "topicType.multiple",
       value: questionType.MULTIPLE_CHOICE,
+      special: false,
       icon: new URL("@/assets/multiple.svg", import.meta.url).href
+    },
+    {
+      label: "topicType.segmentation",
+      value: questionType.READING2,
+      special: true,
+      icon: new URL("@/assets/fd.svg", import.meta.url).href
+    },
+    {
+      label: "topicType.whole",
+      value: questionType.READING1,
+      special: true,
+      icon: new URL("@/assets/all.svg", import.meta.url).href
     },
     // {
     //   label: "填空题",

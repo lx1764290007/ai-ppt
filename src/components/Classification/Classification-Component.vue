@@ -190,6 +190,7 @@ watch(() => props.visible, (newValue) => {
 
   modalVisible.value = newValue;
   if (!newValue && !props.ppt) {
+
     suject.value = "";
     grade.value = undefined;
     imageUrl.value = "";
@@ -214,10 +215,11 @@ watch(() => props.visible, (newValue) => {
 // });
 watch(() => props.data, (newValue) => {
   if (newValue) {
-    grade.value = newValue.gradeId;
-
-    suject.value = (newValue.subjectName || locale.value === 'en'? newValue.subjectNameEn: locale.value === 'zh'? newValue.subjectNameCn: newValue.subjectNameHk) as string;
-    imageUrl.value = newValue.subjectImg;
+    setTimeout(()=>{
+      grade.value = newValue.gradeId;
+      suject.value = newValue.subjectName || (locale.value === 'en'? newValue.subjectNameEn: locale.value === 'zh'? newValue.subjectNameCn: newValue.subjectNameHk)  // (newValue.subjectName || locale.value === 'en'? newValue.subjectNameEn: locale.value === 'zh'? newValue.subjectNameCn: newValue.subjectNameHk) as string;
+      imageUrl.value = newValue.subjectImg;
+    }, 200)
   } else {
     if(!props.ppt){
       grade.value = undefined;
@@ -325,7 +327,7 @@ $img-width: 200px;
 }
 
 .buttons-primary:focus {
-  background-color: #630cc7;
+  background-color: $main-confirm-bg-color-active;
 }
 
 .topic-label {

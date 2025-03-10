@@ -1,15 +1,9 @@
 <template>
   <div v-show="!showStudentWork">
-<!--    <header class="table-header paid-settings-header">-->
-<!--      <div class="header-search">-->
-<!--        <el-input :placeholder="$t('creation.work_name')" class="default__input" size="large" v-model="searchParam.name" prefix-icon="Search" />-->
-<!--        <el-button class="default__button-primary" type="primary" size="large" style="margin-left: 15px;width: 120px" @click="getDataSource">-->
-<!--          {{$t('universal.search')}}-->
-<!--        </el-button>-->
-<!--      </div>-->
-<!--    </header>-->
+
     <main class="table-main">
        <user-theme-work :user-id="userInfo.getUserInfo.user?.id" />
+
     </main>
 <!--    <footer class="table-footer">-->
 <!--      <el-pagination background layout="prev, pager, next"-->
@@ -34,6 +28,7 @@ import { fetchThemeCreationList } from "@/http/opus";
 
 import type { Http } from "@/interface/Http";
 import UserThemeWork from "@cs/User-Theme-Work/User-Theme-Work.vue";
+
 
 const loading = ref(false);
 const showMessageBox = ref(false);

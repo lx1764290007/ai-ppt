@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="footer-button">
-      <el-button type="primary" style="width: 100px" @click="show=true">
+      <el-button type="primary" class="default__button-primary" style="width: 100px" @click="show=true">
         {{$t('universal.add')}}
       </el-button>
       <el-button :type="showDelete? 'default':'danger'"  style="width: 100px" @click="showDelete = !showDelete">

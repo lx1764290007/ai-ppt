@@ -57,7 +57,10 @@ export const covertQuestionItem2QuestionAnswer = (questionItem: QuestionItem): Q
     subjectId: questionItem.subjectId || 0,
     subjectTypeId: questionItem.subjectTypeId || 0,
     remark: questionItem.remark || "",
-    reserve: questionItem.reserve || ""
+    reserve: questionItem.reserve || "",
+    layout: questionItem.layout,
+    subLayout: questionItem.subLayout,
+    questionGroup: questionItem.questionGroup,
   };
 };
 export const covertQuestionAnswer2Array = (questionAnswer: QuestionAnswer): QuestionAnswer => {
@@ -68,6 +71,7 @@ export const covertQuestionAnswer2Array = (questionAnswer: QuestionAnswer): Ques
 };
 //判断一个对象是否能被保存
 export const objectCanSave = (target: any) => {
+  if(target?.type === useQuestionType().READING1 || target?.type === useQuestionType().READING2) return true;
  //1 判断所有关键字段是否都有值 2根据题目类型判断选项是否合法
   const keys = ["id","type", "subjectTypeId", "subjectId", "userId", "gradeId", "correctAnswer", "answers", "maxTime", "questionImg", "question"];
   if (target instanceof Object) {
@@ -82,14 +86,14 @@ export const objectCanSave = (target: any) => {
       const answers = typeof _target.answers === "string"? JSON.parse(_target.answers) as string[]:_target.answers;
 
       //需要有至少一个选项
-      if( answers.filter(it=> Boolean(it)).length < 1){
+      if(answers?.filter(it=> Boolean(it)).length < 1){
           return false
       }
       //需要有至少一个答案
-      if(correctAnswer.filter(it=> Boolean(it)).length < 1){
+      if( correctAnswer.filter(it=> Boolean(it)).length < 1){
         return false;
       }
-      if(!answers.some(it=> correctAnswer.includes(it))){
+      if( !answers?.some(it=> correctAnswer.includes(it))){
         return false;
       }
       if((_target.type === questionType.SINGLE_CHOICE || _target.type === questionType.JUDGEMENT) && correctAnswer.filter(it=> Boolean(it)).length > 1){
@@ -102,6 +106,7 @@ export const objectCanSave = (target: any) => {
 };
 export const objectCanCreate = (target: any) => {
   const keys = ["type", "subjectTypeId", "subjectId", "userId", "gradeId", "correctAnswer", "answers", "maxTime", "questionImg", "question"];
+  if(target?.type === useQuestionType().READING1 || target?.type === useQuestionType().READING2) return true;
   if (target instanceof Object) {
     const firstStepResult =  keys.every((key: any) => {
       return target[key] !== undefined && target[key] !== null && target[key] !== "" && target[key];
@@ -113,17 +118,18 @@ export const objectCanCreate = (target: any) => {
       const correctAnswer = typeof _target.correctAnswer === "string"? JSON.parse(_target.correctAnswer) as string[] : _target.correctAnswer;
       const answers = typeof _target.answers === "string"? JSON.parse(_target.answers) as string[]:_target.answers;
       //需要有至少一个选项
-      if( answers.filter(it=> Boolean(it)).length < 1){
+      if( answers?.filter(it=> Boolean(it)).length < 1){
         return false
       }
       //需要有至少一个答案
-      if(correctAnswer.filter(it=> Boolean(it)).length < 1){
+      if( correctAnswer?.filter(it=> Boolean(it)).length < 1){
         return false;
       }
       if((_target.type === questionType.SINGLE_CHOICE || _target.type === questionType.JUDGEMENT) && correctAnswer.filter(it=> Boolean(it)).length > 1){
         throw "questionEdit.singleChoiceErrorText"
       }
-      if(!_target.answers.some(it=> correctAnswer.includes(it))){
+      //@ts-ignore
+      if( _target.answers && !_target.answers.some(it=> correctAnswer.includes(it))){
         return false;
       }
     }
@@ -134,6 +140,6 @@ export const objectCanCreate = (target: any) => {
 
 export const removeRedundantAnswers = (target:QuestionItem):QuestionItem=>{
   const answers = target.answer, options = target.options;
-  const newAnswers = answers.filter(it=> options.includes(it));
+  const newAnswers = answers?.filter(it=> options.includes(it));
   return Object.assign({},target, {answer: newAnswers});
 }

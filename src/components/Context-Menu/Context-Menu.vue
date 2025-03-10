@@ -15,7 +15,8 @@
         <span style="margin-left: 5px">{{ langEnum[lang] }}</span>
       </el-button>
     </div>
-    <div v-if="menuPopupVisible && !language" :style="{position: 'absolute',transform: `translate(0,${ppt? '20px':'-11px'})`,zIndex: 99999}">
+    <div v-if="menuPopupVisible && !language"
+         :style="{position: 'absolute',transform: `translate(0,${ppt? '20px':'-11px'})`,zIndex: 99999}">
       <div
         :class="{ 'context-menu-popup': !vertical, 'is-vertical': vertical }"
         :style="{ color: color }"
@@ -40,6 +41,40 @@
         </div>
       </div>
     </div>
+    <div v-if="menuPopupVisible && !language"
+         :style="{position: 'absolute',transform: `translate(0,${ppt? '20px':'-11px'})`,zIndex: 99999}">
+      <div
+        :class="{ 'context-menu-popup': !vertical, 'is-vertical': vertical }"
+        :style="{ color: color }"
+      >
+        <div class="context-menu-inner" @click="onMenuClick(MENU_TYPE.EDIT)">
+          <el-icon style="margin-right: 5px;margin-top: 2px">
+            <Edit />
+          </el-icon>
+          {{ $t("modal.edit") }}
+        </div>
+        <div class="context-menu-inner" @click="onMenuClick(MENU_TYPE.COPY)" v-if="!ppt && !world">
+          <el-icon style="margin-right: 5px">
+            <CopyDocument />
+          </el-icon>
+          {{ $t("modal.copy") }}
+        </div>
+        <a :href="`https://docs.google.com/document/d/${fileId}/export?format=docx`" download class="down">
+        <div class="context-menu-inner" @click="onMenuClick(MENU_TYPE.DOWNLOAD)" v-if="world">
+            <el-icon style="margin-right: 5px;transform: translateY(1px)" @click.stop="onDownload">
+              <Download />
+            </el-icon>
+            {{ $t("modal.download") }}
+        </div>
+        </a>
+        <div class="context-menu-inner" @click="onMenuClick(MENU_TYPE.DELETE)">
+          <el-icon style="margin-right: 5px">
+            <Delete />
+          </el-icon>
+          {{ $t("modal.delete") }}
+        </div>
+      </div>
+    </div>
     <div v-show="menuPopupVisible && language" style="transform: translate(90px,11px);z-index: 99999">
       <div
         :class="{ 'context-menu-popup': !vertical, 'is-vertical': vertical }"
@@ -54,7 +89,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { CopyDocument, Delete, Edit, More } from "@element-plus/icons-vue";
+import { CopyDocument, Delete, Download, Edit, More } from "@element-plus/icons-vue";
 import { ref } from "vue";
 import { MENU_TYPE } from "./ENUM";
 import langIcon from "@/assets/lang.png";
@@ -66,6 +101,8 @@ withDefaults(
     vertical?: boolean;
     language: boolean
     ppt?: boolean
+    fileId?: string
+    world?: boolean
     lang: "zh_hant" | "zh" | "en"
   }>(),
   {
@@ -105,6 +142,12 @@ const onBlur = () => {
 </script>
 <style scoped lang="scss">
 @import "@/theme";
+
+a.down {
+  text-decoration: none;
+  color: inherit;
+  box-sizing: border-box;
+}
 
 .context-menu-wrapper-auto-width {
   width: auto !important;
@@ -166,8 +209,13 @@ const onBlur = () => {
       justify-content: flex-start;
       align-items: center;
 
+      a {
+        text-decoration: none;
+
+      }
+
       &:hover {
-        background-color: rgba(85, 63, 197, 0.9);
+        background-color: $main-active-font-color;
         color: #fff;
         cursor: pointer;
       }
@@ -187,9 +235,10 @@ const onBlur = () => {
       display: flex;
       justify-content: flex-start;
       align-items: center;
+      color: #333;
 
       &:hover {
-        background-color: rgba(85, 63, 197, 0.9);
+        background-color: $main-active-font-color;
         color: #fff;
       }
     }

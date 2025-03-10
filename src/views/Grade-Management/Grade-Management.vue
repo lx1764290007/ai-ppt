@@ -360,15 +360,16 @@ onBeforeMount(setGradeList)
   border-radius: 50%;
 }
 .tab__component-icon-edit {
-  color: #21a5bd;
+  color: #fff;
   margin-right: 2px;
 }
 .tab__component-icons {
   position: absolute;
-  right: -12px;
-  top: -10px;
+  right: 0;
+  top: 0;
   z-index: 1;
   font-size: 16px;
+  color: #fff;
 }
 .tab__component-icon-delete:hover {
   background-color: rgba(0,0,0, .2);

@@ -5,7 +5,7 @@ const en = {
   "menu_item_line4": "Game settings",
   "analysis": "Data analysis",
   ai: {
-    title: 'PPT',
+    title: 'Curriculum',
     ppt: 'AI Classroom Program',
   },
   work_management: {
@@ -13,7 +13,12 @@ const en = {
     free_creation: "Free creation",
     theme_creation: "Theme creation",
     student_works: "Student works",
-
+  },
+  comprehension: {
+    title: "Reading Comprehension",
+    document: "Document",
+    multimedia: "Multimedia Interaction",
+    settings: "Game Settings",
   },
   system_settings: {
     title: "System settings",
@@ -28,7 +33,7 @@ const en = {
 }
 const zh_hant = {
   ai: {
-    title: 'PPT',
+    title: '課程',
     ppt: 'AI 課堂計劃',
   },
   work_management: {
@@ -36,6 +41,12 @@ const zh_hant = {
     free_creation: "自由創作",
     theme_creation: "主題創作",
     student_works: "學生作品",
+  },
+  comprehension: {
+    title: "閱讀理解",
+    document: "閱讀文檔",
+    multimedia: "多媒體互動",
+    settings: "遊戲設置"
   },
   system_settings: {
     title: "系統設定",

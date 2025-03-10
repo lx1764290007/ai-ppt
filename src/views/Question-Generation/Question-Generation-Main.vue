@@ -21,7 +21,7 @@
 <!--  <CreateTopic v-model:visible="createTopicByAi.showModal" :data="questions" @done="onCreateDone" />-->
   <LoadingComponent :show="loading" />
   <popup-component v-model:modalValue="showGame">
-    <start-game :subject-type-id="subjectTypeIdValue" @close="showGame = false" :action="0" />
+    <start-game :subject-type-id="subjectTypeIdValue" @close="showGame = false" :action="0" :word="type === 2" />
   </popup-component>
 </template>
 <script setup lang="ts">
@@ -62,7 +62,7 @@ const router = useRouter();
  *       subjectId: activeId.value,
  */
 
-const {page, pageSize, subjectId, subjectTypeId, key} = route.query;
+const {page, pageSize, subjectId, subjectTypeId, key, type=1} = route.query;
 
 const getDataSource = ()=> {
   loading.value = true;

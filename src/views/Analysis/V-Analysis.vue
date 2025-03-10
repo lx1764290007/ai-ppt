@@ -29,7 +29,7 @@
             <el-option
               v-for="item in topicList"
               :key="item.id"
-              :label="item.subjectName"
+              :label="item.subjectName || locale === 'en'? item.subjectNameEn:locale === 'zh'? item.subjectNameCn:item.subjectNameHk"
               :value="item.id"
             />
           </el-select>
@@ -131,7 +131,7 @@ import { Bar, Column, DualAxes } from "@antv/g2plot";
 import { nextTick, onBeforeMount, onMounted, ref, watch } from "vue";
 import { fetchAnalysis, fetchAnalysisQuestion } from "@/http/analysis";
 import type { Grade } from "@/interface/Grade";
-import { useUserInfo, useUserInfoStore } from "@/stores/user";
+import { useUserInfo } from "@/stores/user";
 import { useI18n } from "vue-i18n";
 import { fetchTopicList } from "@/http/topic";
 import type { Http } from "@/interface/Http";
@@ -224,8 +224,15 @@ const getSubjectList = () => {
     }
   }).finally(() => pageLoading.value = false);
 };
-const color = ["#5B8FF9", "#5AD8A6", "#5D7092", "#F6BD16", "#E86454", "#6DC8EC", "#9270CA", "#FF9D4D", "#2FC25B", "#1ca9e6", "#f88c24", "#ff4d4f"];
 
+function getRandomHexColor() {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0");
+}
+
+const color = ["#5B8FF9", "#5AD8A6", "#5D7092", "#F6BD16", "#E86454", "#6DC8EC", "#9270CA", "#FF9D4D", "#2FC25B", "#1ca9e6", "#f88c24", "#ff4d4f"];
+for (let i = 0; i < 40; i++) {
+  color.push(getRandomHexColor());
+}
 const initColumnCanvas = () => {
   const columnPlot = new Column("column-canvas", {
     autoFit: true,
@@ -458,7 +465,7 @@ const getAnalysis = () => {
 let currentDataId: number | undefined;
 const selectQuestion = (data: any) => {
   const { id } = data.data;
-  if(id === currentDataId) return
+  if (id === currentDataId) return;
   const typeIdShouldChange = currentDataId === typeId.value && id !== typeId.value;
   currentDataId = id;
   if (id) {
@@ -478,7 +485,7 @@ const selectQuestion = (data: any) => {
       } else {
         tableData.value = [];
       }
-    }).catch(()=>{
+    }).catch(() => {
       tableData.value = [];
     }).finally(() => loading.value = false);
   }

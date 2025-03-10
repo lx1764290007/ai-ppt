@@ -11,7 +11,7 @@
              alt="icon"
              v-if="item.icon" />
         <span class="assign-menu__item-img" v-else></span>
-        <span>{{ $t(item.menu || "") }}</span>
+        <span style="text-align: left">{{ $t(item.menu || "") }}</span>
       </div>
     </div>
   </aside>
@@ -116,7 +116,7 @@ onMounted(() => {
 }
 
 .assign-menu__item-img {
-  width: 30px;
+  width: 36px;
   margin-right: 10px;
   margin-top: 8px;
 }

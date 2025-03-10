@@ -86,11 +86,13 @@ interface Game {
   remark: string;
   id: number;
 }
-
+const { locale,t } = useI18n();
+const demoGameName = locale.value === 'en'? 'Reading Game': locale.value === 'zh'? '阅读游戏':'閱讀遊戲'
 const audioRef = ref<HTMLAudioElement>();
 const showGame = ref(false);
 const props = defineProps<{
   subjectTypeId?: number
+  word?: boolean
   action: 0 | 1  //0是游戏 1是分享
 }>();
 const emit = defineEmits<{
@@ -102,6 +104,18 @@ const loading = ref(false);
 const iframeRef = ref<HTMLIFrameElement>();
 const showLoading = ref(false);
 const getGameList = () => {
+  if(props.word){
+    gameList.value = [
+      {
+        gameName: demoGameName,
+        gameImage: "https://dreamlab.oss-us-east-1.aliyuncs.com/game/StreamingAssets/3.png",
+        id: 1,
+        remark: location.origin + "/game/AIRead_WebGL"
+      }
+    ]
+    game.value = 1;
+    return
+  }
   loading.value = true;
   fetchGameList({
     subjectTypeId: props.subjectTypeId
@@ -118,7 +132,7 @@ const getGameList = () => {
 };
 
 const qrcodeImage = ref<string>();
-const { locale,t } = useI18n();
+
 const getIframeSrc = computed(() => {
   const target = gameList.value.find(it => it.id === game.value)?.remark || "";
   return target ? `${target}?subjectId=${props.subjectTypeId}&origin=${encodeURIComponent(window.location.origin)}` : "";

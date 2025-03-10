@@ -8,8 +8,10 @@
     <!--        </el-button>-->
     <!--      </div>-->
     <!--    </header>-->
+
     <main class="table-main">
       <user-free-work :user-id="userInfo.getUserInfo?.user?.id" />
+      <div style="height:20px"></div>
     </main>
     <!--    <footer class="table-footer">-->
     <!--      <el-pagination background layout="prev, pager, next"-->
@@ -28,13 +30,14 @@
 import MessageBox from "@cs/MessageBox/Message-Box.vue";
 
 import SignUp from "@vs/Sign-up/Sign-Up.vue";
-import { onBeforeMount, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import { useUserInfo } from "@/stores/user";
 import { fetchThemeCreationList } from "@/http/opus";
-import dayJs  from "dayjs";
 import type { Http } from "@/interface/Http";
 
 import UserFreeWork from "@cs/User-Free-Work/User-Free-Work.vue";
+import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
+import { ElScrollbar } from "element-plus";
 
 const loading = ref(false);
 const showMessageBox = ref(false);

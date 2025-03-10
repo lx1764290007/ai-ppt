@@ -4,6 +4,7 @@
   </div>
   <el-input type="textarea"
             v-model="textareaValue"
+            style="text-align: left"
             :autosize="{ minRows: 23, maxRows: 25 }"
             :placeholder="loading? $t('universal.wait'):$t('universal.placeholder')" class="appraise-content-wrapper">
   </el-input>
@@ -184,7 +185,7 @@ defineExpose({
 })
 
 </script>
-<style scoped>
+<style scoped lang="scss">
 .appraise-content-wrapper {
   width: 100%;
   height: calc(100% - 80px);
@@ -195,6 +196,10 @@ defineExpose({
   align-items: flex-start;
   padding: 15px;
   color: #414D5F;
+  text-align: left;
+  &:deep(.el-textarea__inner){
+    text-align: left;
+  }
 }
 
 .ai-appraise-com__header {
@@ -203,6 +208,9 @@ defineExpose({
   font-size: 18px;
   font-weight: normal;
   pointer-events: none;
+  &:deep(.el-textarea__inner){
+    text-align: left;
+  }
 }
 
 .item--first-line, .item {
@@ -229,6 +237,7 @@ defineExpose({
   padding: 0;
   width: 100%;
   margin-top: 10px;
+  text-align: left;
 }
 
 .appraise-content-wrapper .item-title {

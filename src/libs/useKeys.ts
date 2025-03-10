@@ -6,3 +6,5 @@ export { oAlert, cAlert };
 export const MESSAGE_BOX = "SIMPLE_MESSAGE_BOX";
 
 export const NET_ERROR_TIPS = "NET_ERROR_TIPS";
+
+export const ENCRYPT_KEY = "Vencent233";

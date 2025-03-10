@@ -80,7 +80,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { oAlert } from "@/libs/useKeys";
+import { ENCRYPT_KEY, oAlert } from "@/libs/useKeys";
 import { inject, onBeforeMount, onMounted, reactive, ref, watch, watchEffect } from "vue";
 import type { FormInstance } from "element-plus";
 import { fetchFreeTrial, fetchLogin } from "@/http/user";
@@ -97,6 +97,7 @@ import type { Login } from "@/interface/Login";
 import LoadingComponent from "@cs/Loading/Loading-Component.vue";
 import { USER_TYPE } from "@/enum";
 import { Check } from "@element-plus/icons-vue";
+import { decryptAES, encryptAES, xorDecrypt, xorEncrypt } from "@/libs/encrypt";
 
 const { t } = useI18n();
 const REMEMBER_KEY = "remember_password_mark", REMEMBER_PASSWORD = "remember_password", REMEMBER_NAME = "remember_login_name";
@@ -107,7 +108,7 @@ const formData = reactive<{
   password: string
 }>({
   username: window.localStorage.getItem(REMEMBER_NAME) || "",
-  password: window.localStorage.getItem(REMEMBER_PASSWORD) || "",
+  password: "",
 });
 
 const prop = defineProps(["regValue"]);
@@ -135,7 +136,7 @@ const onSubmit = function(formEl: FormInstance | undefined, path?:string="/") {
       loading.value = true;
       loading.value = true;
       //@ts-ignore
-      fetchLogin(Object.assign(formData)).then((res: Login.LoginData) => {
+      fetchLogin(Object.assign(formData)).then(async (res: Login.LoginData) => {
 
         if (res.code === 200) {
           // const path = useLinkToHome();
@@ -155,7 +156,8 @@ const onSubmit = function(formEl: FormInstance | undefined, path?:string="/") {
           userInfo.setPrivileges(res.data.privileges);
           user.info = res.data;
           if(checked.value) {
-            window.localStorage.setItem(REMEMBER_PASSWORD, formData.password);
+            const _pwdEncrypt  = await encryptAES(formData.password, ENCRYPT_KEY);
+            window.localStorage.setItem(REMEMBER_PASSWORD, _pwdEncrypt);
           } else {
             window.localStorage.removeItem(REMEMBER_PASSWORD);
           }
@@ -251,9 +253,12 @@ watch(loading, (newValue) => {
     setTimeout(() => loading.value = false, 8000);
   }
 });
-onMounted(()=>{
+onMounted(async ()=>{
   formData.username = window.localStorage.getItem(REMEMBER_NAME) || "";
-  formData.password = window.localStorage.getItem(REMEMBER_PASSWORD) || "";
+  const _pwdEncryptStr = window.localStorage.getItem(REMEMBER_PASSWORD) || "";
+  if(_pwdEncryptStr) {
+    formData.password = await decryptAES(_pwdEncryptStr, ENCRYPT_KEY);
+  }
 })
 onBeforeMount(()=> {
   user.removeData()

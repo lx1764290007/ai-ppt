@@ -1,23 +1,11 @@
 <template>
-  <div id="__use_ai"></div>
-  <!--  <el-button icon="ArrowLeftBold" class="edit-back" type="primary" text @click="onBack">-->
-  <!--    {{ pptName }}-->
-  <!--  </el-button>-->
-
   <div class="header-wrapper">
-    <!--    <el-scrollbar class="header">-->
-    <!--      <div class="header-item" v-for="(item,i) of tags" :key="i">-->
-    <!--        <el-tag size="large" type="primary" effect="light" @click="onAddToTheme(item.value)" @close="onRemoveTag(i)"-->
-    <!--                class="tag" closable>{{ item.value }}-->
-    <!--        </el-tag>-->
-    <!--      </div>-->
-    <!--      <el-tag type="success" effect="light"  size="large" @click="onAddTag" v-if="!addTagState" style="cursor: pointer">-->
-    <!--        {{$t('universal.add')}}-->
-    <!--      </el-tag>-->
-    <!--      <el-input ref="InputRef" @blur="onTagAdd" @keyup.enter="onTagAdd" size="default" placeholder="请输入" v-else-->
-    <!--                style="width: 100px;" v-model="newTagValue" />-->
-    <!--    </el-scrollbar>-->
-    <el-select :placeholder="$t('universal.area')" v-model="area" class="default__select header-select">
+    <el-button class="go-back-btn buttons-default" size="large" @click="()=> onBack()"
+               style="transform: translateY(-10px)">
+      <el-image :src="backIcon" alt="back" class="icon img" @click="onBack" style="margin-left: 20px" />
+    </el-button>
+
+    <el-select :placeholder="$t('universal.area')" v-model="area" class="default__select header-select" size="large">
       <el-option v-for="item of areaList" :key="item.label" :value="item.label" :label="item.label">
         <div class="area-item">
           <el-image :src="item.icon" class="area-icon" fit="contain"></el-image>
@@ -26,14 +14,16 @@
 
       </el-option>
     </el-select>
-    <el-select :placeholder="$t('grade.grade')" v-model="grade" class="default__select header-select">
-      <el-option v-for="item of gradeList" :key="item.id" :value="item.id" :label="locale.locale.value === 'en'? `${$t('grade.grade')}${item.label}`:`${item.label}${$t('grade.grade')}`" />
+    <el-select :placeholder="$t('grade.grade')" v-model="grade" class="default__select header-select" size="large">
+      <el-option v-for="item of gradeList" :key="item.id" :value="item.id"
+                 :label="locale.locale.value === 'en'? `${$t('grade.grade')}${item.label}`:`${item.label}${$t('grade.grade')}`" />
 
     </el-select>
-    <el-select :placeholder="$t('ppt.nums')" v-model="page" class="default__select header-select">
-      <el-option v-for="item of pageList" :key="item.value" :value="item.value" :label="$t('ppt.about') + item.value + $t('universal.page')" />
+    <el-select :placeholder="$t('ppt.nums')" v-model="page" class="default__select header-select" size="large">
+      <el-option v-for="item of pageList" :key="item.value" :value="item.value"
+                 :label="$t('ppt.about') + item.value + $t('universal.page')" />
     </el-select>
-    <el-select :placeholder="$t('ppt.language')" v-model="lang" class="default__select header-select">
+    <el-select :placeholder="$t('ppt.language')" v-model="lang" class="default__select header-select" size="large">
       <el-option value="中文繁體" label="中文繁體">中文繁體</el-option>
       <el-option value="中文简体" label="中文简体">中文简体</el-option>
       <el-option value="English" label="English">English</el-option>
@@ -54,7 +44,7 @@
         <img src="@/assets/video.png" alt="img" class="tag-icon" />
       </div>
       <div class="editor-generate">
-        <el-button type="primary" class="default__button-primary" v-if="!isAgain"
+        <el-button type="primary" class="default__button-primary" v-if="false"
                    :style="{width: locale.locale.value === 'en'? '100px':'100px'}"
                    size="large" @click="onGenerate(0)"
                    :loading="loading">
@@ -63,34 +53,27 @@
         <el-button type="primary"
                    v-else
                    class="default__button-primary"
-                   :style="{width: locale.locale.value === 'en'? '150px':'100px'}"
+                   :style="{width: locale.locale.value === 'en'? '150px':'150px'}"
                    size="large" @click="onGenerate(2)"
                    :loading="loading">{{ $t("ppt.generate_again") }}
         </el-button>
       </div>
     </div>
   </div>
-  <div class="ppt-editor-theme">
+  <el-empty :description="$t('universal.empty')" style="margin-top: 150px" v-if="jsonData.length<1 && !loading" />
+  <div class="ppt-editor-theme" v-else-if="loading">
+    <loading-area :show="loading" />
+  </div>
+  <div class="ppt-editor-theme" v-else>
     <div class="ppt-list-back">
-      <img src="@/assets/back.png" alt="back" class="icon img" @click="onBack" />
-      <span class="split-dash">|</span>
       <span style="color: #222">
-        {{$t('ppt.theme')}}
+        {{ $t("ppt.theme") }}
       </span>
     </div>
     <div class="ppt-editor-theme-list">
-      <div :class="{'ppt-editor-theme-item':true, 'ppt-editor-theme-item-active':true}">
-        <el-icon class="selector-active-icon">
-          <Check />
-        </el-icon>
-        <el-image class="preview-theme-image"
-                  :src="templateIcon"
-                  alt="preview" fit="contain" />
-      </div>
+      <t-leading :height="contentHeight" :data-source="jsonData" @done="onDone" :rebuild="isAgain" />
     </div>
   </div>
-  <LoadingComponent :show="loading" />
-
   <popup-component v-model:modal-value="showConfirm">
     <div class="confirm-wrapper">
          <span class="confirm-tip">
@@ -99,32 +82,49 @@
          </span>
       <span class="confirm-title">{{ $t("ppt.pptSuccess") }}</span>
       <el-space style="display: flex;margin-top: 30px;margin-left: 8px">
-        <el-button class="buttons-primary" type="primary"  style="width: 90px" @click="onOpenUrl">
+        <el-button class="buttons-primary" type="primary" style="width: 90px" @click="onOpenUrl">
           {{ $t("ppt.go") }}
         </el-button>
-
       </el-space>
     </div>
-
   </popup-component>
+  <loading-component :show="showLoading" />
 </template>
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import { ElInput, ElMessage } from "element-plus";
-// import PPTContent from "@vs/AI/PPT/PPT-Content.vue";
 import vcSubscribePublic from "@/libs/eventBus";
+import TLeading from "@cs/PPT-Leading/T-Leading.vue";
 
-import {fetchCreatePPT, fetchTagAddAndEdit, fetchTagList } from "@/http/ppt";
+import { fetchAddPPT, fetchGeneratePPT2, fetchGeneratePPTOutline, fetchTagAddAndEdit, fetchTagList } from "@/http/ppt";
 import type { Http } from "@/interface/Http";
-import { Check, Warning } from "@element-plus/icons-vue";
-import LoadingComponent from "@cs/Loading-Com/Loading-Component.vue";
-import {useI18n} from "vue-i18n";
+import { Warning } from "@element-plus/icons-vue";
+import LoadingArea from "@cs/Loading-Com/Loading-Area.vue";
+import { useI18n } from "vue-i18n";
 import { fetchAreas } from "@/http/topic";
 import PopupComponent from "@cs/Popup/Popup-Component.vue";
-import templateIcon from "@/assets/ppt-template-cover.png";
+import backIcon from "@/assets/back.png";
+import LoadingComponent from "@cs/Loading/Loading-Component.vue";
+
+
+interface DataSource {
+  chapter: number;
+  content: string;
+  order?: number;
+  title: string;
+  type: number;
+  detail?: string;
+}
+
+interface Result {
+  template: number;
+  textType: string;
+  textTone: string;
+  outline: DataSource[];
+}
 
 const locale = useI18n();
-
+const contentHeight = `calc(100vh - 225px)`;
 const tags = reactive<{ id: number, value: string }[]>([]);
 const addTagState = ref(false);
 const newTagValue = ref("");
@@ -134,12 +134,15 @@ const hasContext = ref(false);
 const grade = ref();
 const page = ref<number>(25);
 const area = ref<string>();
-const areaList = ref<{label: string; value: string, icon:string}[]>([]);
+const areaList = ref<{ label: string; value: string, icon: string }[]>([]);
 const lang = ref("中文繁體");
 const themeId = ref();
 const isAgain = ref(false);
 const showConfirm = ref(false);
 const gradeList = ref<any[]>([]);
+const jsonData = ref<DataSource[]>([]);
+const showLoading = ref(false);
+const generateAgainId = ref("");
 /**
  * Array(15).fill(0).map((_, i) => {
  *   if(locale.locale.value === 'zh_hant'){
@@ -158,33 +161,33 @@ const gradeList = ref<any[]>([]);
 const pageList = [
   {
     value: 20,
-    label: `${locale.t("ppt.about")}${20}${locale.t('universal.page')}`,
+    label: `${locale.t("ppt.about")}${20}${locale.t("universal.page")}`
   },
   {
     value: 25,
-    label: `${locale.t("ppt.about")}${25}${locale.t('universal.page')}`,
+    label: `${locale.t("ppt.about")}${25}${locale.t("universal.page")}`
   },
   {
     value: 30,
-    label: `${locale.t("ppt.about")}${30}${locale.t('universal.page')}`,
+    label: `${locale.t("ppt.about")}${30}${locale.t("universal.page")}`
   },
   {
     value: 35,
-    label: `${locale.t("ppt.about")}${35}${locale.t('universal.page')}`,
+    label: `${locale.t("ppt.about")}${35}${locale.t("universal.page")}`
   },
   {
     value: 40,
-    label: `${locale.t("ppt.about")}${40}${locale.t('universal.page')}`,
+    label: `${locale.t("ppt.about")}${40}${locale.t("universal.page")}`
   },
   {
     value: 45,
-    label: `${locale.t("ppt.about")}${45}${locale.t('universal.page')}`,
+    label: `${locale.t("ppt.about")}${45}${locale.t("universal.page")}`
   },
   {
     value: 50,
-    label: `${locale.t("ppt.about")}${50}${locale.t('universal.page')}`,
-  },
-]
+    label: `${locale.t("ppt.about")}${50}${locale.t("universal.page")}`
+  }
+];
 page.value = pageList[0].value;
 let urlData: any = [];
 
@@ -192,6 +195,7 @@ interface Theme {
   id: number;
   json: { title: string, content: string };
 }
+
 let finalUrl = "";
 const themeList = ref<Theme[]>([]);
 // eslint-disable-next-line no-undef
@@ -209,27 +213,86 @@ const onTagAdd = async () => {
   }
   addTagState.value = false;
 };
-const onOpenUrl = ()=>{
-  if(finalUrl){
-    window.open(finalUrl,"_blank");
+const onOpenUrl = () => {
+  console.log(finalUrl);
+  if (finalUrl) {
+    window.open(finalUrl, "_blank");
   }
   showConfirm.value = false;
-}
-const getCountries = ()=> {
-  fetchAreas().then((res:any) => {
-    if(res?.code === 200){
-      areaList.value = res.data.map((it:any)=> {
+};
+const getCountries = () => {
+  fetchAreas().then((res: any) => {
+    if (res?.code === 200) {
+      areaList.value = res.data.map((it: any) => {
         return {
           label: it.countryName,
           value: it.countryCode,
           icon: it.flagUrl
-        }
-      })
-      area.value = res.data.find(it=> it.countryCode === "HK")?.countryName;
+        };
+      });
+      area.value = res.data.find(it => it.countryCode === "HK")?.countryName;
     }
-  })
-}
-const onGenerate = (types?:number) => {
+  });
+};
+const onDone = async (result: Result) => {
+
+    showLoading.value = true;
+    fetchGeneratePPT2({
+      query: themeValue.value,
+      pptId: props.pptId,
+      subjectId: props.subjectId,
+      template: themeId.value,
+      //@ts-ignore
+      classes: props.grades.find(it => it.id === grade.value)?.label + "年級",
+      num: page.value,
+      area: area.value,
+      language: lang.value,
+      type: isAgain.value? 2:1,  //2重新生成1第一次生成
+      ...result
+    }).then((res: Http.Response<any>) => {
+      if (res?.code === 200) {
+        const base_edit_url_start = "https://docs.google.com/presentation/d/";
+        const base_edit_url_end = "/edit";
+        isAgain.value = true;
+        try {
+          const _data = JSON.parse(res.data.pptOutline) as DataSource[];
+          const newJson = _data.map((item: { title: string, content?: string }) => {
+            return {
+              imageDescription: item.title || item.content
+            };
+          });
+          finalUrl = `${base_edit_url_start}${props.pptId}${base_edit_url_end}?data=${encodeURIComponent(JSON.stringify(newJson))}`;
+          showConfirm.value = true;
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
+    }).finally(() => {
+      showLoading.value = false;
+    });
+};
+
+const onGeneratePoint = () => {
+  loading.value = true;
+  showLoading.value = true;
+  fetchAddPPT({
+    //@ts-ignore
+    subjectId: props.subjectId,
+    userId: props.userId
+  }).then((res: Http.Response<any>) => {
+
+    if (res && res.code === 200) {
+      //@ts-ignore
+      generateAgainId.value = res.data.pptid;
+
+    }
+  }).finally(() => {
+    loading.value = false;
+    showLoading.value = false;
+  });
+};
+const onGenerate = (types?: number) => {
   if (!themeValue.value) return;
   hasContext.value = true;
   loading.value = true;
@@ -241,67 +304,32 @@ const onGenerate = (types?:number) => {
   if (lang.value) {
     value += `,Please use ${lang.value} language,`;
   }
-
-  fetchCreatePPT({
+  fetchGeneratePPTOutline({
     query: themeValue.value,
     pptId: props.pptId,
     subjectId: props.subjectId,
     template: themeId.value,
-    classes: props.grades.find(it=> it.id === grade.value)?.label + '年級',
+    //@ts-ignore
+    classes: props.grades.find(it => it.id === grade.value)?.label + "年級",
     num: page.value,
     area: area.value,
     language: lang.value,
     type: types
   }).then((res: any) => {
     if (res && res.code === 200) {
-      isAgain.value = true;
-      // urlData = [...urlData, res.list || []];
-      // const resultDescs = encodeURIComponent(JSON.stringify((res.data || []).map((it:any)=> {
-      //   return {
-      //     imageDescription: it.imageDescription
-      //   }
-      // })));
-      const base_edit_url_start = "https://docs.google.com/presentation/d/";
-      const base_edit_url_end = "/edit";
+
       try {
-        const json = JSON.parse(res.data.pptOutline);
-        const _data = json.map((item:any)=> {
-          return {
-            title: item.title,
-            imageDescription: item.title || ""
-          };
-        })
+        jsonData.value = JSON.parse(res.data.pptOutline) as DataSource[];
 
-        finalUrl = `${base_edit_url_start}${props.pptId}${base_edit_url_end}?data=${encodeURIComponent(JSON.stringify(_data))}`;
-
-      }catch(err){
-        finalUrl = `${base_edit_url_start}${props.pptId}${base_edit_url_end}`;
+      } catch (err) {
+        console.log(err);
       }
-
-      showConfirm.value = true;
-      // ElMessageBox.confirm(
-      //   locale.locale.value === 'zh_hant'? "PPT已生成":"PPT has been generated",
-      //   "",
-      //   {
-      //     confirmButtonText: locale.t("universal.confirm"),
-      //     cancelButtonText: locale.t("universal.cancel"),
-      //     showCancelButton: false,
-      //     showClose: false,
-      //     type: "success"
-      //   }
-      // )
-      //   .then(() => {
-      //     window.open(url, 'Idea Lab',
-      //       'width=1024,height=764,left=100,top=100,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes');
-      //   })
-      //   .catch(() => {
-      //     window.open(url, "_blank");
-      //   });
     } else {
       ElMessage.info(res.msg);
     }
   }).finally(() => {
     loading.value = false;
+    showLoading.value = false;
   });
 
 };
@@ -311,6 +339,7 @@ const props = withDefaults(defineProps<{
   pptId?: number
   subjectId: number
   grade: number
+  userId: number
   grades: any[]
 }>(), {
   pptName: "",
@@ -349,7 +378,7 @@ const getTagList = async () => {
   }
 };
 const onSelectBg = (item: number) => {
-  if(bgImage.value === item) {
+  if (bgImage.value === item) {
     bgImage.value = null;
     themeId.value = null;
   } else {
@@ -387,23 +416,28 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 @import "@/theme";
+
 .header-wrapper {
   position: relative;
 }
+
 .area-item {
   display: flex;
   align-items: center;
   justify-content: flex-start;
 
 }
+
 .area-icon {
   width: 24px;
   align-items: center;
   margin-right: 5px;
 }
-.area-icon:deep(.el-image__inner){
+
+.area-icon:deep(.el-image__inner) {
   margin-top: 5px;
 }
+
 .creator {
   display: flex;
   align-items: center;
@@ -414,9 +448,11 @@ onBeforeUnmount(() => {
   margin-right: 15px;
   border-radius: 10px;
 }
+
 .theme-input:deep(.el-input__wrapper) {
   border-radius: 10px;
 }
+
 .theme-style-item img {
   width: 50px;
   height: 50px;
@@ -428,9 +464,17 @@ onBeforeUnmount(() => {
   margin-bottom: 20px;
 
 }
+
+.go-back-btn {
+  margin-right: 20px;
+  background-color: #fff;
+  width: 40px;
+}
+
 .header-select:deep(.el-input) {
   --el-input-border-radius: 8px;
 }
+
 .ppt-list-module {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -456,19 +500,24 @@ onBeforeUnmount(() => {
 }
 
 .ppt-editor-theme {
-  height: calc(100% - 52px - 40px - 20px);
-  background-color: #fff;
+  height: calc(100% - 52px - 40px - 25px);
+
   position: relative;
   margin-top: 15px;
 }
 
 .ppt-editor-theme-list {
-  padding: 15px 15px 15px 15px;
+
   box-sizing: border-box;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   flex-flow: row wrap;
+}
+
+.icon {
+  width: 24px;
+  margin-right: 20px;
 }
 
 .ppt-editor-theme-item {
@@ -514,10 +563,12 @@ onBeforeUnmount(() => {
   margin-right: 5px;
   cursor: pointer;
 }
+
 .split-dash {
   color: #d5d5d5;
   padding: 0 5px 2px 5px;
 }
+
 .selector-active-icon {
   position: absolute;
   bottom: 0;
@@ -534,10 +585,11 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
 }
+
 .confirm-wrapper {
-  width: 330px;
-  height: 160px;
-  background: #fff;
+  width: 380px;
+  height: 180px;
+  background-color: #fff;
   border-radius: 12px;
   display: flex;
   flex-flow: column nowrap;

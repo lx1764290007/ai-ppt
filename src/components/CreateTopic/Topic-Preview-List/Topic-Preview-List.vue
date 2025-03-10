@@ -1,7 +1,7 @@
 <template>
   <div class="topic--preview">
     <el-scrollbar>
-      <div class="topic--preview-content" :style="{height: isFullScreen? 'calc(100vh - 240px)':'500px'}">
+      <div class="topic--preview-content" :style="{height: isFullScreen? 'calc(100vh - 210px)':'500px'}">
         <div class="topic--preview-content__item" v-for="(item, index) of dataSource" :key="index">
           <img
             src="@/assets/select_less.png"

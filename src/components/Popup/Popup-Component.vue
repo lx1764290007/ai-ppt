@@ -2,7 +2,7 @@
 
 <template>
   <teleport to="body">
-  <div class="popup-wrapper" v-if="modalValue">
+  <div class="popup-wrapper" v-if="modalValue ||modelValue">
     <div class="popup-animate">
       <slot name="default"></slot>
     </div>
@@ -11,7 +11,7 @@
 </template>
 <script setup lang="ts">
 defineProps<{
-  modalValue: boolean
+  modalValue?: boolean
   modelValue?: boolean
 }>()
 defineEmits<{

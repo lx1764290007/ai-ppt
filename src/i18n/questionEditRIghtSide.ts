@@ -7,7 +7,10 @@ export default  {
     copy: "複製",
     exit: "退出",
     save: "保存",
-    done: "完成"
+    done: "完成",
+    template: "模板選擇",
+    reading: "閱讀理解"
+
   },
   ZH_CN: {
     type: "问题类型",
@@ -17,7 +20,9 @@ export default  {
     copy: "复制",
     exit: "退出",
     save: "保存",
-    done: "完成"
+    done: "完成",
+    template: "模板选择",
+    reading: "阅读理解"
   },
   EN: {
     type: "Question Type",
@@ -28,5 +33,7 @@ export default  {
     exit: "Exit",
     save: "Save",
     done: "Done",
+    template: "Select Template",
+    reading: "Reading Comprehension"
   }
 };

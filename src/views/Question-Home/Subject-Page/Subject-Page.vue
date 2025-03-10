@@ -1,138 +1,136 @@
 <template>
   <div class="subject-page-wrapper">
-    <header class="subject-page-header" ref="header">
+    <header ref="header" class="subject-page-header">
       <el-button class="go-back-btn buttons-default" size="large" @click="()=> onBack()">
-        <el-image :src="backIcon" fit="contain" alt="back" style="width: 20px" />
+        <el-image :src="backIcon" alt="back" fit="contain" style="width: 20px" />
       </el-button>
       <span style="color: #43536C">{{ backTitle }}</span>
-      <el-form @submit.prevent="onSearch" class="search-form" inline>
+      <el-form class="search-form" inline @submit.prevent="onSearch">
 
-        <el-input type="text"
+        <el-input v-model="searchValue"
                   :placeholder="$t('subject.search')"
-                  size="large"
+                  class="input__default_theme search"
+                  clearable
                   prefix-icon="search"
-                  @change="onSearch"
-                  v-model="searchValue"
-                  clearable class="input__default_theme search" />
-        <el-button type="primary" native-type="submit" class="default__button-primary" style="margin-left: 5px;margin-right: 10px">
-          {{$t('universal.search')}}
+                  size="large"
+                  type="text" @change="onSearch" />
+        <el-button class="default__button-primary" native-type="submit" style="margin-left: 5px;margin-right: 10px"
+                   type="primary">
+          {{ $t("universal.search") }}
         </el-button>
-        <el-button type="primary" class="default__button-primary" @click.stop="onTopicTypeAdd" style="margin-left: 5px;margin-right: 10px">
+        <el-button class="default__button-primary" style="margin-left: 5px;margin-right: 10px" type="primary"
+                   @click.stop="onTopicTypeAdd">
           <el-image :src="addIcon" alt="icon" fit="contain" style="width:16px;margin-right: 5px" />
-          {{$t('subject.add')}}{{$t('subject.questionBank')}}
+          {{ $t("subject.add") }}{{ $t("subject.questionBank") }}
         </el-button>
       </el-form>
 
     </header>
-    <div style="position: relative; box-sizing: border-box" ref="main">
-      <el-icon class="icon-arrow--left" @click="onHandleScroll(-1)" v-if="topicTypeDataSource.length >=3">
-        <ArrowLeft />
-      </el-icon>
-      <el-icon class="icon-arrow--right" @click="onHandleScroll(1)" v-if="topicTypeDataSource.length >= 3">
-        <ArrowRight />
-      </el-icon>
-      <el-scrollbar native ref="scrollRef" @scroll="onScroll" class="scrollbar-hidden">
-        <main class="subject-item-wrapper" v-if="topicTypeLoading">
-          <el-skeleton style="width:100vw;display: flex;justify-content: space-around" loading animated>
-            <template #template>
-              <el-skeleton-item variant="rect" style="width: 180px; height: 110px;margin-left: 20px" v-for="_item of 5"
-                                :key="_item" />
-            </template>
-          </el-skeleton>
-        </main>
-        <main class="subject-item-wrapper" v-if="!topicTypeLoading && topicTypeDataSource.length > 0">
+    <div ref="main" style="position: relative; box-sizing: border-box">
+      <!--      <el-icon class="icon-arrow&#45;&#45;left" @click="onHandleScroll(-1)" v-if="topicTypeDataSource.length >=3">-->
+      <!--        <ArrowLeft />-->
+      <!--      </el-icon>-->
+      <!--      <el-icon class="icon-arrow&#45;&#45;right" @click="onHandleScroll(1)" v-if="topicTypeDataSource.length >= 3">-->
+      <!--        <ArrowRight />-->
+      <!--      </el-icon>-->
+      <!--      <el-scrollbar native ref="scrollRef" @scroll="onScroll" class="scrollbar-hidden">-->
+      <!--        <main class="subject-item-wrapper" v-if="topicTypeLoading">-->
+      <!--          <el-skeleton style="width:100vw;display: flex;justify-content: space-around" loading animated>-->
+      <!--            <template #template>-->
+      <!--              <el-skeleton-item variant="rect" style="width: 180px; height: 110px;margin-left: 20px" v-for="_item of 5"-->
+      <!--                                :key="_item" />-->
+      <!--            </template>-->
+      <!--          </el-skeleton>-->
+      <!--        </main>-->
+
+      <!--        <main class="subject-item-wrapper" v-if="!topicTypeLoading && topicTypeDataSource.length === 0">-->
+      <!--             <span class="empty">-->
+      <!--               {{ $t("subject.noQuestionBank") }}-->
+      <!--             </span>-->
+      <!--        </main>-->
+      <!--      </el-scrollbar>-->
+    </div>
+    <el-scrollbar :style="{ height: sectionHeight }">
+      <section class="section-wrapper">
+        <!--        <el-skeleton loading animated v-if="loading || topicTypeLoading">-->
+        <!--          <template #template>-->
+        <!--            <el-skeleton-item variant="rect" style="width: 100%; height: 40px; margin-top: 20px;display: block"-->
+        <!--                              v-for="_item of 6" :key="_item" />-->
+        <!--          </template>-->
+        <!--        </el-skeleton>-->
+        <p v-if="!loading && !topicTypeLoading && topicTypeDataSource.length < 1" class="empty_">
+          {{ $t("subject.noQuestionBank") }}
+        </p>
+        <!--        <div class="section-item" v-for="(item, index) of dataSource" :key="index"-->
+        <!--             v-show="!loading && !topicTypeLoading">-->
+        <!--          <span class="title-type">{{ page * PAGE_SIZE - PAGE_SIZE + index + 1-->
+        <!--            }}-{{ $t(getQuestType(item.type) as string) }}</span>-->
+        <!--          <span class="question">{{ item.question }}</span>-->
+        <!--          <div class="handler">-->
+        <!--            <el-icon class="icon" @click="toGenerateQuestion(item.id)">-->
+        <!--              <Edit />-->
+        <!--            </el-icon>-->
+        <!--            <el-icon class="icon" @click="onDeleteItem(item.id,index)" v-loading="item.deleteLoading">-->
+        <!--              <Delete />-->
+        <!--            </el-icon>-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <main v-if="!topicTypeLoading && topicTypeDataSource.length > 0" class="subject-item-wrapper"
+              :style="{'justify-content':topicTypeDataSource.length<4? 'flex-start':'space-between'}">
           <div
-            :class="{'subject-item':true}"
             v-for="(item,i) of topicTypeDataSource"
             :key="i"
-            @click="onSelect(item.id)"
+            :class="{'subject-item':true}"
             :data-content="item.typeName"
+            @click="onSelect(item.id)"
+            @dblclick="toGenerateQuestion(0)"
           >
             <div class="content-menu" @click.stop>
-              <ContextMenu vertical color="#444" @select="onContextSelect($event, item)">
+              <ContextMenu color="#444" vertical @select="onContextSelect($event, item)">
               </ContextMenu>
             </div>
             <div :class="{'subject-item-img':true,'subject-item__active': activeId === item.id}" :title="item.typeName">
               <el-image
-                class="preview--image"
                 :scroll-container="scrollRef"
                 :src="item.typeImg"
-                fit="cover"
+                class="preview--image"
                 crossorigin-="anonymous"
+                fit="cover"
               />
             </div>
           </div>
         </main>
-        <main class="subject-item-wrapper" v-if="!topicTypeLoading && topicTypeDataSource.length === 0">
-             <span class="empty">
-               {{ $t("subject.noQuestionBank") }}
-             </span>
-        </main>
-      </el-scrollbar>
-    </div>
-    <el-scrollbar :style="{ height: sectionHeight }">
-      <section class="section-wrapper">
-        <el-skeleton loading animated v-if="loading || topicTypeLoading">
-          <template #template>
-            <el-skeleton-item variant="rect" style="width: 100%; height: 40px; margin-top: 20px;display: block"
-                              v-for="_item of 6" :key="_item" />
-          </template>
-        </el-skeleton>
-        <p class="empty_" v-if="!loading && dataSource.length<1 && !topicTypeLoading">
-          {{ $t("subject.noTopic") }}
-        </p>
-        <div class="section-item" v-for="(item, index) of dataSource" :key="index"
-             v-show="!loading && !topicTypeLoading">
-          <span class="title-type">{{ page * PAGE_SIZE - PAGE_SIZE + index + 1
-            }}-{{ $t(getQuestType(item.type) as string) }}</span>
-          <span class="question">{{ item.question }}</span>
-          <div class="handler">
-            <el-icon class="icon" @click="toGenerateQuestion(item.id)">
-              <Edit />
-            </el-icon>
-            <el-icon class="icon" @click="onDeleteItem(item.id,index)" v-loading="item.deleteLoading">
-              <Delete />
-            </el-icon>
-          </div>
-        </div>
       </section>
-      <div style="height: 85px;"></div>
     </el-scrollbar>
-    <div class="pagination" v-if="dataSource.length > 0">
-      <el-button type="primary" size="large"
-                 :class="{'buttons-primary':true, 'start-game-button':true, 'start-game-button-en':locale==='EN'}"
+    <div class="pagination">
+      <el-button :class="{'buttons-primary':true, 'start-game-button':true, 'start-game-button-en':locale==='EN'}"
+                 size="large"
+                 type="primary"
                  @click="()=>openGame(0)">
         {{ $t("subject.startGame") }}
       </el-button>
-      <el-button type="primary" size="large"
-                 :class="{'buttons-primary':true, 'start-game-button2':true, 'start-game-button-en2':locale==='EN'}"
+      <el-button :class="{'buttons-primary':true, 'start-game-button2':true, 'start-game-button-en2':locale==='EN'}"
+                 size="large"
+                 type="primary"
                  @click="()=>openGame(1)">
         {{ $t("subject.shareGame") }}
       </el-button>
-      <el-pagination
-        v-model:current-page="page"
-        background
 
-        layout="prev, pager, next"
-        @current-change="onPageChange"
-        :total="total"
-        :page-size="PAGE_SIZE"
-        @change="onPageChange"
-      />
     </div>
   </div>
-  <subject-editor :visible="subjectEditShow"
-                  @close="onEditClose"
-                  :data="activeItem"
-                  :subject-id="route.query.id" />
+  <loading-component :show="topicTypeLoading" />
+  <subject-editor :data="activeItem"
+                  :subject-id="route.query.id"
+                  :visible="subjectEditShow"
+                  @close="onEditClose" />
   <popup-component v-model:modalValue="showGame">
-    <start-game :subject-type-id="activeId" @close="showGame = false" :action="action" />
+    <start-game :action="action" :subject-type-id="activeId" @close="showGame = false" />
   </popup-component>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
-import { ArrowLeft, ArrowRight, Delete, Edit } from "@element-plus/icons-vue";
+
 import addIcon from "@/assets/question-bank-icon.png";
 import { useRoute, useRouter } from "vue-router";
 import ContextMenu from "@cs/Context-Menu/Context-Menu.vue";
@@ -151,6 +149,7 @@ import type { QuestionAnswer } from "@/interface/Topic";
 import { ElMessage, type ElScrollbar } from "element-plus";
 import { useI18n } from "vue-i18n";
 import backIcon from "@/assets/back.png";
+import LoadingComponent from "@cs/Loading-Com/Loading-Component.vue";
 
 const PAGE_SIZE = 12;
 
@@ -175,7 +174,7 @@ let scrollLeft: number = 0;
 const ITEM_WIDTH = 200;
 
 let backTitle = "";
-const { locale,t } = useI18n();
+const { locale, t } = useI18n();
 const total = ref(0);
 const topicDict = useTopicDict();
 const loading = ref(false);
@@ -208,7 +207,7 @@ const onEditClose = (result?: boolean, data?: TopicType) => {
 
   if (data && result) {
     topicTypeDataSource.value.push(data);
-    if(topicTypeDataSource.value.length === 1) {
+    if (topicTypeDataSource.value.length === 1) {
       activeId.value = topicTypeDataSource.value[0].id;
     }
 
@@ -237,6 +236,7 @@ const onTopicTypeAdd = () => {
 };
 const onTopicTypeDelete = () => {
   fetchTopicTypeDelete({
+
     subjectTypeId: activeItem.value?.id
   }).then((res: Http.Response<any>) => {
     if (res.code === 200) {
@@ -260,7 +260,7 @@ const onTopicTypeDelete = () => {
 onBeforeMount(() => {
   backTitle = route.query.title;
   const userId = route.query.userId;
-  if(userId && String(userId) !== String(userInfoStore.getUserInfo?.user?.id)) {
+  if (userId && String(userId) !== String(userInfoStore.getUserInfo?.user?.id)) {
     ElMessage({
       message: t("universal.userError"),
       icon: "Warning", // 自定义图标
@@ -270,8 +270,8 @@ onBeforeMount(() => {
     });
     router.replace("/");
   }
-  if(route.query.subjectTypeId){
-    activeId.value = parseInt(route.query.subjectTypeId)
+  if (route.query.subjectTypeId) {
+    activeId.value = parseInt(route.query.subjectTypeId);
   }
 });
 const messageListener = (data: any) => {
@@ -306,12 +306,13 @@ const toGenerateQuestion = (id: number) => {
       pageSize: PAGE_SIZE,
       subjectTypeId: activeId.value,
       subjectId: route.query.id,
-      id
+      id,
+      type: 1
     }
   });
 };
 const getDataSource = () => {
-  if (!activeId.value) return;
+  if (!activeId.value || activeId.value) return;
   loading.value = true;
   fetchQuestionList({
     subjectTypeId: activeId.value,
@@ -361,11 +362,12 @@ const sectionHeight = computed(() => {
     headerHeight = header.value.getBoundingClientRect().height;
     mainHeight = main.value.getBoundingClientRect().height;
   }
-  return `calc(100vh - 75px - ${headerHeight}px - ${mainHeight}px - 20px - 20px)`;
+  return `calc(100vh - 75px - ${headerHeight}px - 85px)`;
 });
 const getData = (refreshTopic = true) => {
   topicTypeLoading.value = true;
   fetchTopicTypeList({
+    type: 1, //1問答 2world
     subjectId: route.query?.id,
     userId: userInfoStore?.getUserInfo?.user?.id
   }).then((res: Http.Response<TopicType[]>) => {
@@ -387,8 +389,8 @@ const onDeleteItem = (id: number, index: number) => {
     if (res.code === 200) {
       dataSource.value.splice(index, 1);
       if (dataSource.value.length < 1) {
-         page.value = 1;
-         onPageChange();
+        page.value = 1;
+        onPageChange();
       }
       // ElMessage({
       //   message: "已删除",
@@ -416,7 +418,7 @@ onBeforeMount(() => {
 
 });
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @import "@/theme";
 
 $width: 180px;
@@ -446,20 +448,21 @@ $height: calc($width / 4 * 3);
   }
 
   .subject-item-wrapper {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    position: relative;
-    margin-top: 10px;
-    overflow: visible;
-    min-height: 150px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, $width); /* 每列等宽对齐 */
+    justify-content: space-between; /* 让第一行的元素两端对齐 */
+    grid-auto-flow: dense; /* 确保所有列对齐 */
+    padding: 20px 33px 20px 14px;
+    gap: 30px;
+    box-sizing: border-box;
 
     .subject-item__active {
       box-shadow: 0 0 0 4px $main-confirm-bg-color !important;
     }
 
+
     .subject-item {
-      flex-shrink: 0;
+      flex-shrink: 1;
       width: $width;
       height: $height;
       background-color: #f0f2f5;
@@ -471,7 +474,6 @@ $height: calc($width / 4 * 3);
       align-items: center;
       box-sizing: content-box;
       padding-bottom: 35px;
-      margin: 0 15px;
 
       &::after {
         content: attr(data-content);
@@ -521,12 +523,14 @@ $height: calc($width / 4 * 3);
     padding: 0 10px;
     height: 50px;
     box-sizing: border-box;
+
     .search-form {
       position: absolute;
       right: 0;
       display: flex;
       align-items: center;
       margin-right: 10px;
+
       .add-icon {
         width: 40px;
         margin-left: 20px;
@@ -567,9 +571,6 @@ $height: calc($width / 4 * 3);
 
 .section-wrapper {
   position: relative;
-  padding: 10px;
-  overflow-y: auto;
-  min-height: 300px;
 
   .empty_ {
     text-align: center;
@@ -671,38 +672,33 @@ $height: calc($width / 4 * 3);
   align-items: flex-end;
   padding-top: 5px;
   height: 85px;
-  position: absolute;
-  top: calc(100% - 71px);
-  left: 0;
-  right: 0;
-  z-index: 99;
-  padding-bottom: 7px;
-
+  position: relative;
   background-color: rgba(240, 244, 245, 0.6);
   backdrop-filter: blur(8px);
   box-sizing: border-box;
+  border-top: 1px solid #e7e7e7;
 
   .start-game-button {
     position: absolute;
-    right: 200px;
+    right: 170px;
     top: 5px;
     width: 140px;
   }
 
   .start-game-button-en {
-    right: 200px;
+    right: 170px;
     width: 160px;
   }
 
   .start-game-button2 {
     position: absolute;
-    right: 40px;
+    right: 10px;
     top: 5px;
     width: 140px;
   }
 
   .start-game-button-en2 {
-    right: 20px;
+    right: 10px;
     width: 160px;
   }
 
@@ -719,6 +715,7 @@ $height: calc($width / 4 * 3);
     --el-pagination-hover-color: $main-bg-color;
   }
 }
+
 .go-back-btn {
   margin-right: 20px;
   background-color: #fff;

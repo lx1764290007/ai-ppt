@@ -10,6 +10,26 @@ export const fetchPPTAndThemeList = async function(data?:{gradeId:number, userId
     url: "/sys/getGradePPTList"
   });
 };
+//Language-Code
+export const fetchGeneratePPTOutline = async function(data?:{gradeId:number, userId:number, themeName?:string, pptName?:string, themeId: number}): Promise<any> {
+  return await useFetch({
+    data,
+    config: {
+      method: "POST",
+    },
+    url: "/sys/generatePPTOutline"
+  });
+};
+export const fetchGeneratePPT2 = async function(data?:any): Promise<any> {
+  return await useFetch({
+    data,
+    config: {
+      method: "POST",
+    },
+    url: "/sys/generatePPT"
+  });
+};
+
 export const fetchAddTheme = async function(data: {
   themeName: string;
   gradeId: number;

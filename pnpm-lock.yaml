@@ -83,6 +83,9 @@ importers:
       vue:
         specifier: ^3.2.47
         version: 3.2.47
+      vue-draggable-plus:
+        specifier: ^0.6.0
+        version: 0.6.0(@types/sortablejs@1.15.8)
       vue-fabric:
         specifier: ^0.1.42
         version: 0.1.42
@@ -1422,6 +1425,9 @@ packages:
 
   '@types/semver@7.3.13':
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
+
+  '@types/sortablejs@1.15.8':
+    resolution: {integrity: sha512-b79830lW+RZfwaztgs1aVPgbasJ8e7AXtZYHTELNXZPsERt4ymJdjV4OccDbHQAvHrCcFpbF78jkm0R6h/pZVg==, tarball: https://registry.npmmirror.com/@types/sortablejs/-/sortablejs-1.15.8.tgz}
 
   '@types/tough-cookie@4.0.2':
     resolution: {integrity: sha512-Q5vtl1W5ue16D+nIaW8JWebSSraJVlK+EthKn7e7UcD4KWsaSJ8BqGPXNaPghgtcn/fhvrN17Tv8ksUsQpiplw==}
@@ -4248,6 +4254,15 @@ packages:
       '@vue/composition-api':
         optional: true
 
+  vue-draggable-plus@0.6.0:
+    resolution: {integrity: sha512-G5TSfHrt9tX9EjdG49InoFJbt2NYk0h3kgjgKxkFWr3ulIUays0oFObr5KZ8qzD4+QnhtALiRwIqY6qul4egqw==, tarball: https://registry.npmmirror.com/vue-draggable-plus/-/vue-draggable-plus-0.6.0.tgz}
+    peerDependencies:
+      '@types/sortablejs': ^1.15.0
+      '@vue/composition-api': '*'
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
   vue-eslint-parser@9.1.0:
     resolution: {integrity: sha512-NGn/iQy8/Wb7RrRa4aRkokyCZfOUWk19OP5HP6JEozQFX5AoS/t+Z0ZN7FY4LlmWc4FNI922V7cvX28zctN8dQ==}
     engines: {node: ^14.17.0 || >=16.0.0}
@@ -5817,6 +5832,8 @@ snapshots:
     optional: true
 
   '@types/semver@7.3.13': {}
+
+  '@types/sortablejs@1.15.8': {}
 
   '@types/tough-cookie@4.0.2': {}
 
@@ -9122,6 +9139,10 @@ snapshots:
   vue-demi@0.13.11(vue@3.2.47):
     dependencies:
       vue: 3.2.47
+
+  vue-draggable-plus@0.6.0(@types/sortablejs@1.15.8):
+    dependencies:
+      '@types/sortablejs': 1.15.8
 
   vue-eslint-parser@9.1.0(eslint@8.35.0):
     dependencies:

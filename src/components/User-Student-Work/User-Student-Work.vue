@@ -78,7 +78,7 @@
     <p class="empty-text" v-if="showEmpty_themeList">{{$t('universal.empty')}}</p>
   </div>
 
-  <div class="student-work--content" style="height: calc(100vh - 60px - 60px - 20px);"  v-if="showWorkItem && searchParams.type === WORK_TYPE.STUDENT">
+  <div class="student-work--content" :style="{height: 'calc(100vh - 60px - 60px - 20px)'}"  v-if="showWorkItem && searchParams.type === WORK_TYPE.STUDENT">
     <div class="student-work--item" v-for="item of workList" :key="item.id" @click="onShowAiEvaluate(item)">
       <div class="production-img">
         <el-image :src="item.production" alt="picture" fit="contain" />
